@@ -1,0 +1,49 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier --write src/**/*.ts && prettier --write src/*.ts",
+    "lint": "eslint --fix --ext .ts .",
+    "format": "npm run prettier && npm run lint",
+    "build": "tsc",
+    "jasmine": "jasmine",
+    "start": "tsc && node dist/server.ts",
+    "migrate:up": "db-migrate up",
+    "migrate:down": "db-migrate up",
+    "migrate:reset": "db-migrate reset",
+    "test": "export ENV=test && tsc && db-migrate up --env test && jasmine && db-migrate reset --env test",
+    "dev": "nodemon src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.10.0",
+    "socket.io": "^4.6.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.13",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.17",
+    "@types/helmet": "^4.0.0",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^18.15.0",
+    "@types/nodemon": "^1.19.2",
+    "@types/pg": "^8.6.6",
+    "@types/typescript": "^2.0.0",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}
