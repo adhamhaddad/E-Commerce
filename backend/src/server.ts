@@ -17,17 +17,17 @@ const corsOptions = {
   methods: ['GET', 'POST', 'HEAD', 'PATCH', 'PUT', 'DELETE', 'OPTIONS']
 };
 
-// Middlewares
+// Server Middlewares
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(cors(corsOptions));
 app.use(json());
 app.use(urlencoded({ extended: false }));
 
-// Controllers
+// Server Controllers
 app.use(router);
 
-// Server
+// Server Listener
 const server = https
   .createServer(
     {

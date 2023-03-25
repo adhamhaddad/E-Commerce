@@ -86,11 +86,11 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 export const authUser = async (req: Request, res: Response) => {
   try {
-    const response = await user.createUser(req.body);
+    const response = await user.authUser(req.body);
     const json = (j: {}) => {
       res.status(200).json(j);
     };
-    const token = sign(response, json);
+    // const token = sign(response, json);
   } catch (err) {
     res.status(500).json({
       status: false,
