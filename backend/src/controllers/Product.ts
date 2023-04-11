@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Product from '../models/Product';
+import Product from '../models/product';
 
 const product = new Product();
 

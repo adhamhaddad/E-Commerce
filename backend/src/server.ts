@@ -1,4 +1,4 @@
-import express, { Application, json, urlencoded } from 'express';
+import express, { Application } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -10,19 +10,31 @@ import configs from './configs';
 import router from './routes';
 
 const app: Application = express();
-const port: number = configs.port || 8080;
+const port: number = configs.port || 80;
 const corsOptions = {
-  origin: '*',
-  statusSuccess: 200,
-  methods: ['GET', 'POST', 'HEAD', 'PATCH', 'PUT', 'DELETE', 'OPTIONS']
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'X-Access-Token',
+    'Authorization',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Methods'
+  ],
+  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+  preflightContinue: true,
+  origin: '*'
 };
 
 // Server Middlewares
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(cors(corsOptions));
-app.use(json());
-app.use(urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Server Controllers
 app.use(router);
@@ -45,6 +57,7 @@ const server = https
     console.log(`Frontend server is listening on ${configs.frontend_host}`);
     console.log('Press CTRL+C to stop the server.');
   });
+
 const io = new Server(server, {
   cors: corsOptions
 });
