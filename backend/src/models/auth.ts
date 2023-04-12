@@ -33,5 +33,17 @@ class Auth {
       connection.release();
     }
   }
+  async authMe(id: string): Promise<UserType & AuthType> {
+    const connection = await database.connect();
+    try {
+      const sql = `SELECT DISTINCT u.*, e.email FROM users u, emails e WHERE u.id=$1 AND e.user_id=$1`;
+      const result = await connection.query(sql, [id]);
+      return result.rows[0];
+    } catch (error) {
+      throw new Error((error as Error).message);
+    } finally {
+      connection.release();
+    }
+  }
 }
 export default Auth;
