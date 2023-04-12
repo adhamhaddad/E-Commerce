@@ -1,7 +1,7 @@
 import database from '../database';
 
 type SubCategoryType = {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   category_id: number;

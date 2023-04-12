@@ -21,7 +21,7 @@ class User {
     const connection = await database.connect();
     try {
       // User Query
-      database.query('BEGIN');
+      await database.query('BEGIN');
       const userSQL = `INSERT INTO users (first_name, last_name, role) VALUES ($1, $2, $3) RETURNING *`;
       const result = await connection.query(userSQL, [
         u.first_name,
@@ -33,10 +33,11 @@ class User {
       const emailSQL = 'INSERT INTO emails (email, user_id) VALUES ($1, $2)';
       await connection.query(emailSQL, [u.email, id]);
       // Password Query
-      const passwordSQL = 'INSERT INTO passwords () VALUES ()';
+      const passwordSQL = 'INSERT INTO passwords (password, user_id) VALUES ($1, $2)';
       const password = await hash(u.password);
       await connection.query(passwordSQL, [password, id]);
-      database.query('COMMIT');
+
+      await database.query('COMMIT');
       return result.rows[0];
     } catch (err) {
       database.query('ROLLBACK');

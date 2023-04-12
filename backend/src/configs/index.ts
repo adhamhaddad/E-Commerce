@@ -17,7 +17,7 @@ const configs = {
   refresh_token: process.env.JWT_SECRET_REFRESH_TOKEN,
   access_expires: process.env.JWT_ACCESS_TOKEN_EXPIRATION,
   refresh_expires: process.env.JWT_REFRESH_TOKEN_EXPIRATION,
-  backend_host: process.env.BACKEND_SERVER_HOST,
-  frontend_host: process.env.FRONTEND_SERVER_HOST
+  backend_host: process.env.BACKEND_HOST,
+  frontend_host: process.env.FRONTEND_HOST
 };
 export default configs;

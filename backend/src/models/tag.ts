@@ -1,17 +1,17 @@
 import database from '../database';
 
-type IconType = {
-  id?: string;
-  icon_url: string;
-  category_id: number;
+type TagType = {
+  id: number;
+  name: string;
+  product_id: number;
 };
 
-class Icon {
-  async createIcon(i: IconType): Promise<IconType> {
+class Tag {
+  async createTag(t: TagType): Promise<TagType> {
     const connection = await database.connect();
     try {
-      const sql = `INSERT INTO icons (icon_url, category_id) VALUES ($1, $2) RETURNING *`;
-      const result = await connection.query(sql, [i.icon_url, i.category_id]);
+      const sql = `INSERT INTO tags (name, product_id) VALUES ($1, $2) RETURNING *`;
+      const result = await connection.query(sql, [t.name, t.product_id]);
       return result.rows[0];
     } catch (error) {
       throw new Error((error as Error).message);
@@ -19,11 +19,11 @@ class Icon {
       connection.release();
     }
   }
-  async updateIcon(id: string, i: IconType): Promise<IconType> {
+  async updateTag(id: string, t: TagType): Promise<TagType> {
     const connection = await database.connect();
     try {
-      const sql = 'UPDATE icons SET icon_url=$2 WHERE id=$1 RETURNING *';
-      const result = await connection.query(sql, [i.icon_url, id]);
+      const sql = `UPDATE tags SET name=$2 WHERE id=$1 RETURNING *`;
+      const result = await connection.query(sql, [id, t.name]);
       return result.rows[0];
     } catch (error) {
       throw new Error((error as Error).message);
@@ -31,10 +31,10 @@ class Icon {
       connection.release();
     }
   }
-  async deleteIcon(id: string): Promise<IconType> {
+  async deleteTag(id: string): Promise<TagType> {
     const connection = await database.connect();
     try {
-      const sql = 'DELETE FROM icons WHERE id=$1 RETURNING id';
+      const sql = `DELETE FROM tags WHERE id=$1 RETURNING id`;
       const result = await connection.query(sql, [id]);
       return result.rows[0];
     } catch (error) {
@@ -44,4 +44,4 @@ class Icon {
     }
   }
 }
-export default Icon;
+export default Tag;

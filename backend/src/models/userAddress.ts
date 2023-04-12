@@ -1,12 +1,12 @@
 import database from '../database';
 
 type UserAddressType = {
-  id: string;
+  id: number;
   city: string;
   postal_code: number;
   address1: string;
   address2: string;
-  user_id: string;
+  user_id: number;
 };
 
 class UserAddress {

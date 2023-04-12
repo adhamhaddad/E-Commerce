@@ -1,7 +1,7 @@
 import database from '../database';
 
 export type EmailType = {
-  id: string;
+  id: number;
   email: string;
   is_default: boolean;
   is_verified: boolean;

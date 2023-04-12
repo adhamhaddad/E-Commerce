@@ -1,7 +1,7 @@
 import database from '../database';
 
 type CategoryType = {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   user_id: string;

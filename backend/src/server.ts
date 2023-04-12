@@ -1,8 +1,9 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import https from 'https';
+import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { Server } from 'socket.io';
@@ -30,7 +31,7 @@ const corsOptions = {
 
 // Server Middlewares
 app.use(helmet());
-app.use(morgan('combined'));
+app.use(morgan('common'));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,25 +39,31 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Server Controllers
 app.use(router);
+router.use((_req: Request, res: Response) => {
+  res.status(404).json({
+    status: false,
+    message: 'Page not found!'
+  });
+});
 
 // Server Listener
-const server = https
-  .createServer(
-    {
-      key: fs.readFileSync(
-        path.join(__dirname, '..', 'certificate', 'key.pem')
-      ),
-      cert: fs.readFileSync(
-        path.join(__dirname, '..', 'certificate', 'cert.pem')
-      )
-    },
-    app
-  )
-  .listen(port, () => {
-    console.log(`Backend server is listening on ${configs.backend_host}`);
-    console.log(`Frontend server is listening on ${configs.frontend_host}`);
-    console.log('Press CTRL+C to stop the server.');
-  });
+// https
+//   .createServer(
+//     {
+//       key: fs.readFileSync(
+//         path.join(__dirname, '..', 'certificate', 'key.pem')
+//       ),
+//       cert: fs.readFileSync(
+//         path.join(__dirname, '..', 'certificate', 'cert.pem')
+//       )
+//     },
+//     app
+//   )
+const server = http.createServer(app).listen(port, () => {
+  console.log(`Backend server is listening on ${configs.backend_host}`);
+  console.log(`Frontend server is listening on ${configs.frontend_host}`);
+  console.log('Press CTRL+C to stop the server.');
+});
 
 const io = new Server(server, {
   cors: corsOptions

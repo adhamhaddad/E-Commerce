@@ -1,9 +1,9 @@
 import database from '../database';
 
 type PhoneType = {
-  id: string;
+  id: number;
   phone: string;
-  user_id: string;
+  user_id: number;
 };
 
 class Phone {
