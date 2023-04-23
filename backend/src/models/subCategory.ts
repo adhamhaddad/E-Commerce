@@ -1,3 +1,4 @@
+import { PoolClient } from 'pg';
 import database from '../database';
 
 type SubCategoryType = {
@@ -8,56 +9,60 @@ type SubCategoryType = {
 };
 
 class SubCategory {
-  async createSubCategory(c: SubCategoryType): Promise<SubCategoryType> {
+  async withConnection<T>(
+    callback: (connection: PoolClient) => Promise<T>
+  ): Promise<T> {
     const connection = await database.connect();
     try {
-      const sql = `INSERT INTO sub_categories (name, slug, category_id) VALUES ($1, $2, $3) RETURNING *`;
-      const result = await connection.query(sql, [c.name, c.category_id]);
-      return result.rows[0];
+      return await callback(connection);
     } catch (error) {
       throw new Error((error as Error).message);
     } finally {
       connection.release();
     }
   }
+  async createSubCategory(c: SubCategoryType): Promise<SubCategoryType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'INSERT INTO sub_categories (name, slug, category_id) VALUES ($1, $2, $3) RETURNING *',
+        values: [c.name, c.category_id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
+    });
+  }
   async getSubCategories(id: string): Promise<SubCategoryType[]> {
-    const connection = await database.connect();
-    try {
-      const sql = 'SELECT * FROM sub_categories WHERE category_id=$1';
-      const result = await connection.query(sql, [id]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'SELECT * FROM sub_categories WHERE category_id=$1',
+        values: [id]
+      };
+      const result = await connection.query(query);
       return result.rows;
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
   async updateSubCategory(
     id: string,
     c: SubCategoryType
   ): Promise<SubCategoryType> {
-    const connection = await database.connect();
-    try {
-      const sql = `UPDATE sub_categories SET name=$2, slug=$3 WHERE id=$1 RETURNING *`;
-      const result = await connection.query(sql, [id, c.name, c.slug]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'UPDATE sub_categories SET name=$2, slug=$3 WHERE id=$1 RETURNING *',
+        values: [id, c.name, c.slug]
+      };
+      const result = await connection.query(query);
       return result.rows[0];
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
   async deleteSubCategory(id: string): Promise<SubCategoryType> {
-    const connection = await database.connect();
-    try {
-      const sql = `DELETE FROM sub_categories WHERE id=$1 RETURNING id`;
-      const result = await connection.query(sql, [id]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'DELETE FROM sub_categories WHERE id=$1 RETURNING id',
+        values: [id]
+      };
+      const result = await connection.query(query);
       return result.rows[0];
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
 }
 export default SubCategory;

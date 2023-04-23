@@ -1,3 +1,4 @@
+import { PoolClient } from 'pg';
 import database from '../database';
 
 type IconType = {
@@ -7,41 +8,47 @@ type IconType = {
 };
 
 class Icon {
-  async createIcon(i: IconType): Promise<IconType> {
+  async withConnection<T>(
+    callback: (connection: PoolClient) => Promise<T>
+  ): Promise<T> {
     const connection = await database.connect();
     try {
-      const sql = `INSERT INTO icons (icon_url, category_id) VALUES ($1, $2) RETURNING *`;
-      const result = await connection.query(sql, [i.icon_url, i.category_id]);
-      return result.rows[0];
+      return await callback(connection);
     } catch (error) {
       throw new Error((error as Error).message);
     } finally {
       connection.release();
     }
+  }
+  async createIcon(i: IconType): Promise<IconType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'INSERT INTO icons (icon_url, category_id) VALUES ($1, $2) RETURNING *',
+        values: [i.icon_url, i.category_id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
+    });
   }
   async updateIcon(id: string, i: IconType): Promise<IconType> {
-    const connection = await database.connect();
-    try {
-      const sql = 'UPDATE icons SET icon_url=$2 WHERE id=$1 RETURNING *';
-      const result = await connection.query(sql, [i.icon_url, id]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'UPDATE icons SET icon_url=$2 WHERE id=$1 RETURNING *',
+        values: [i.icon_url, id]
+      };
+      const result = await connection.query(query);
       return result.rows[0];
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
   async deleteIcon(id: string): Promise<IconType> {
-    const connection = await database.connect();
-    try {
-      const sql = 'DELETE FROM icons WHERE id=$1 RETURNING id';
-      const result = await connection.query(sql, [id]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'DELETE FROM icons WHERE id=$1 RETURNING id',
+        values: [id]
+      };
+      const result = await connection.query(query);
       return result.rows[0];
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
 }
 export default Icon;

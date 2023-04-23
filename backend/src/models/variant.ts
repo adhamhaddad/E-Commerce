@@ -1,13 +1,16 @@
 import { PoolClient } from 'pg';
 import database from '../database';
 
-type AttributeValueType = {
+export type VariantType = {
   id: number;
-  value: string;
-  attribute_id: number;
+  name: string;
+  slug: string;
+  price: string;
+  quantity: number;
+  product_id: number;
 };
 
-class AttributeValue {
+class Variant {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
@@ -20,55 +23,40 @@ class AttributeValue {
       connection.release();
     }
   }
-  async createAttributeValue(
-    a: AttributeValueType
-  ): Promise<AttributeValueType> {
+  async createVariant(v: VariantType): Promise<VariantType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'INSERT INTO attribute_values (name, attribute_id) VALUES ($1, $2) RETURNING *',
-        values: [a.value, a.attribute_id]
+        text: 'INSERT INTO variants (name, slug, price, quantity, product_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        values: [v.name, v.price, v.quantity, v.product_id]
       };
       const result = await connection.query(query);
       return result.rows[0];
     });
   }
-  async getAttributeValues(id: string): Promise<AttributeValueType[]> {
+  async getVariant(id: string): Promise<VariantType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SELECT * FROM attribute_values WHERE attribute_id=$1',
+        text: 'SELECT * FROM variants WHERE product_id=$1',
         values: [id]
       };
       const result = await connection.query(query);
       return result.rows;
     });
   }
-  async getAttributeValue(id: string): Promise<AttributeValueType> {
+  async updateVariant(id: string, v: VariantType): Promise<VariantType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SElECT * FROM attribute_values WHERE id=$1',
-        values: [id]
+        text: 'UPDATE variants SET name=$2, slug=$3, price=$4, quantity=$5 WHERE id=$1 RETURNING *',
+        value: [id, v.name, v.slug, v.price, v.quantity]
       };
       const result = await connection.query(query);
       return result.rows[0];
     });
   }
-  async updateAttributeValue(
-    id: string,
-    a: AttributeValueType
-  ): Promise<AttributeValueType> {
+  async deleteVariant(id: string) {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'UPDATE attribute_values SET value=$2 WHERE id=$1 RETURNING *',
-        values: [id, a.value]
-      };
-      const result = await connection.query(query);
-      return result.rows[0];
-    });
-  }
-  async deleteAttributeValue(id: string): Promise<AttributeValueType> {
-    return this.withConnection(async (connection: PoolClient) => {
-      const query = {
-        text: 'DELETE FROM attribute_values WHERE id=$1 RETURNING id',
+        text: 'DELETE FROM variants WHERE id=$1 RETURNING id',
         values: [id]
       };
       const result = await connection.query(query);
@@ -76,4 +64,4 @@ class AttributeValue {
     });
   }
 }
-export default AttributeValue;
+export default Variant;

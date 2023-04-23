@@ -21,19 +21,19 @@ export const validateRegister = [
     .withMessage('last_name must be at least 5 and maximum 50 letters'),
   body('email')
     .exists()
-    .withMessage('Email is missing from the body')
+    .withMessage('email is missing from the body')
     .notEmpty()
-    .withMessage('Email is empty')
+    .withMessage('email is empty')
     .isEmail()
-    .withMessage('Email is not valid')
+    .withMessage('email is not valid')
     .normalizeEmail()
-    .withMessage('Email is not normalized'),
+    .withMessage('email is not normalized'),
   body('password')
     .exists()
-    .withMessage('Password is missing from the body')
+    .withMessage('password is missing from the body')
     .notEmpty()
-    .withMessage('Email is empty')
+    .withMessage('password is empty')
     .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
+    .withMessage('password must be at least 8 characters long'),
   (req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ];

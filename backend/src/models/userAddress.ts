@@ -1,3 +1,4 @@
+import { PoolClient } from 'pg';
 import database from '../database';
 
 type UserAddressType = {
@@ -10,68 +11,60 @@ type UserAddressType = {
 };
 
 class UserAddress {
-  async createUserAddress(a: UserAddressType): Promise<UserAddressType> {
+  async withConnection<T>(
+    callback: (connection: PoolClient) => Promise<T>
+  ): Promise<T> {
     const connection = await database.connect();
     try {
-      const sql = `INSERT INTO user_address (city, postal_code, address1, address2, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-      const result = await connection.query(sql, [
-        a.city,
-        a.postal_code,
-        a.address1,
-        a.address2,
-        a.user_id
-      ]);
-      return result.rows[0];
+      return await callback(connection);
     } catch (error) {
       throw new Error((error as Error).message);
     } finally {
       connection.release();
     }
   }
+  async createUserAddress(a: UserAddressType): Promise<UserAddressType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'INSERT INTO user_addresses (city, postal_code, address1, address2, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        values: [a.city, a.postal_code, a.address1, a.address2, a.user_id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
+    });
+  }
   async getUserAddresses(id: string): Promise<UserAddressType[]> {
-    const connection = await database.connect();
-    try {
-      const sql = `SElECT * FROM user_address WHERE user_id=$1`;
-      const result = await connection.query(sql, [id]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'SElECT * FROM user_addresses WHERE user_id=$1',
+        values: [id]
+      };
+      const result = await connection.query(query);
       return result.rows;
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
   async updateUserAddress(
     id: string,
     a: UserAddressType
   ): Promise<UserAddressType> {
-    const connection = await database.connect();
-    try {
-      const sql = `UPDATE user_address SET city=$2, postal_code=$3, address1=$4, address2=$5 WHERE id=$1 RETURNING *`;
-      const result = await connection.query(sql, [
-        id,
-        a.city,
-        a.postal_code,
-        a.address1,
-        a.address2
-      ]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'UPDATE user_addresses SET city=$2, postal_code=$3, address1=$4, address2=$5 WHERE id=$1 RETURNING *',
+        values: [id, a.city, a.postal_code, a.address1, a.address2]
+      };
+      const result = await connection.query(query);
       return result.rows[0];
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
   async deleteUserAddress(id: string): Promise<UserAddressType> {
-    const connection = await database.connect();
-    try {
-      const sql = `DELETE FROM user_address WHERE id=$1 RETURNING id`;
-      const result = await connection.query(sql, [id]);
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'DELETE FROM user_addresses WHERE id=$1 RETURNING id',
+        values: [id]
+      };
+      const result = await connection.query(query);
       return result.rows[0];
-    } catch (error) {
-      throw new Error((error as Error).message);
-    } finally {
-      connection.release();
-    }
+    });
   }
 }
 export default UserAddress;

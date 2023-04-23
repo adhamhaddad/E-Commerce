@@ -2,9 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import https from 'https';
 import http from 'http';
-import fs from 'fs';
 import path from 'path';
 import { Server } from 'socket.io';
 import configs from './configs';
@@ -46,19 +44,6 @@ router.use((_req: Request, res: Response) => {
   });
 });
 
-// Server Listener
-// https
-//   .createServer(
-//     {
-//       key: fs.readFileSync(
-//         path.join(__dirname, '..', 'certificate', 'key.pem')
-//       ),
-//       cert: fs.readFileSync(
-//         path.join(__dirname, '..', 'certificate', 'cert.pem')
-//       )
-//     },
-//     app
-//   )
 const server = http.createServer(app).listen(port, () => {
   console.log(`Backend server is listening on ${configs.backend_host}`);
   console.log(`Frontend server is listening on ${configs.frontend_host}`);
