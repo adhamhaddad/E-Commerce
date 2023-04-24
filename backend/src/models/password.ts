@@ -1,6 +1,6 @@
 import { PoolClient } from 'pg';
 import database from '../database';
-import { hash, compare } from '../utils/password';
+import { hash as hashPass, compare } from '../utils/password';
 
 export type PasswordType = {
   id?: number;
@@ -27,7 +27,7 @@ class Password {
     }
   }
   async createPassword(connection: PoolClient, p: PasswordType) {
-    const password = await hash(p.password);
+    const password = await hashPass(p.password);
     const query = {
       text: 'INSERT INTO passwords (password, user_id) VALUES ($1, $2) RETURNING id',
       values: [password, p.user_id]
@@ -46,7 +46,7 @@ class Password {
         const { password: hash } = result.rows[0];
         const check = await compare(p.old_password, hash);
         if (check) {
-          const password = await hash(p.new_password);
+          const password = await hashPass(p.new_password);
           const query = {
             text: 'UPDATE passwords SET password=$2 WHERE user_id=$1 RETURNING id',
             values: [id, password]

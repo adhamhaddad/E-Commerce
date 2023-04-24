@@ -2,13 +2,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const database =
+  process.env.ENV === 'dev'
+    ? process.env.POSTGRES_DB
+    : process.env.POSTGRES_DB_TEST;
+
 const configs = {
   env: process.env.ENV,
   host: process.env.HOST,
   port: Number(process.env.PORT),
   db_host: process.env.POSTGRES_URI,
   db_port: Number(process.env.POSTGRES_PORT),
-  db_name: process.env.POSTGRES_DB,
+  db_name: database,
   db_user: process.env.POSTGRES_USER,
   db_password: process.env.POSTGRES_PASSWORD,
   salt: Number(process.env.SALT_ROUNDS),

@@ -1,8 +1,8 @@
-# Linker
+# E-Commerce
 
 ## Description
 
-This is a E-commerce platform called `Ecommerce` that simulates `Jumia` and `Amazon`.
+This is a E-commerce platform that simulates `Jumia` and `Amazon`.
 
 ## Dependencies
 
@@ -28,7 +28,7 @@ This is a E-commerce platform called `Ecommerce` that simulates `Jumia` and `Ama
 
 3. Third without closing the terminal in step 2, navigate to the frontend `cd frontend` to intall the node_modules `npm install` or `yarn`. After installation is done start the frontend server with `npm run start` or `yarn start`.
 
-Note: open `Ecommerce/frontend/src/utils/api.js`
+Note: open `Ecommerce/frontend/.env` to change API_URL
 
 ## Unit Tests
 
