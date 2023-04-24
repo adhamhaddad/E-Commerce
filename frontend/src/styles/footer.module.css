@@ -1,0 +1,46 @@
+.footer {
+    background-color: rgb(44, 44, 44);
+    color: #FFF;
+}
+
+.footer .sections {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.footer .sections .social,
+.footer .sections .community {
+    width: 200px;
+    /* height: 150px; */
+}
+
+.footer .sections .social h3,
+.footer .sections .community h3 {
+    padding: 10px 0px;
+}
+
+.footer .sections .social a,
+.footer .sections .community a {
+    display: flex;
+    align-items: center;
+    height: 35px;
+    font-size: 14px;
+}
+
+.footer .sections .social a i,
+.footer .sections .community a i {
+    width: 30px;
+    text-align: center;
+}
+
+.footer .copyright {
+    border-top: 1px solid #FFF;
+    margin: 0px 10px;
+    font-size: 13px;
+    text-align: center;
+    padding: 10px 0px;
+}
+
+.footer .copyright a {
+    text-decoration: underline;
+}
