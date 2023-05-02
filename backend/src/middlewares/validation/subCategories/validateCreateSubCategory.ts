@@ -4,22 +4,28 @@ import { validate } from '../validationResult';
 
 export const validateCreateSubCategory = [
   body('name')
-    .exists()
-    .withMessage('city is missing from the body')
+    .withMessage("name does'nt exists in the body.")
     .notEmpty()
-    .isString(),
+    .withMessage('name is empty')
+    .isString()
+    .withMessage('name must be a string'),
+  // .isLength({ min: 4, max: 50 })
+  // .withMessage('name must be at least 4 and maximum 50 letters'),
   body('slug')
     .exists()
-    .withMessage('postal_code is missing from the body')
+    .withMessage("slug doesn't exists in the body.")
     .notEmpty()
-    .isNumeric()
-    .withMessage('postal_code must be a number'),
-  body('user_id')
+    .withMessage('slug is empty')
+    .isString()
+    .withMessage('slug must be a string'),
+  // .isLength({ min: 3, max: 50 })
+  // .withMessage('slug must be at least 3 and maximum 50 letters'),
+  body('category_id')
     .exists()
-    .withMessage('user_id is missing from the body')
+    .withMessage('category_id is missing from the body')
     .notEmpty()
-    .withMessage('user_id is empty')
+    .withMessage('category_id is empty')
     .isNumeric()
-    .withMessage('user_id must be a number'),
+    .withMessage('category_id must be a number'),
   (req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ];

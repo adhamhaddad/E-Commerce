@@ -5,11 +5,13 @@ import {
   email,
   phone,
   userAddress,
-  categories,
   icons,
-  tags,
+  categories,
+  subCategories,
+  products,
   attributeNames,
-  attributeValues
+  attributeValues,
+  orders
 } from './api';
 
 const router = Router();
@@ -17,12 +19,14 @@ const router = Router();
 router.use('/auth', auth);
 router.use('/users', user);
 router.use('/emails', email);
-router.use('/phone', phone);
+router.use('/phones', phone);
 router.use('/user-address', userAddress);
-router.use('/categories', categories);
 router.use('/icons', icons);
-router.use('/tags', tags);
+router.use('/categories', categories);
+router.use('/sub-categories', subCategories);
+router.use('/products', products);
 router.use('/attribute-names', attributeNames);
 router.use('/attribute-values', attributeValues);
+router.use('/orders', orders);
 
 export default router;

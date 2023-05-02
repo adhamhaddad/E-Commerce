@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 
 export type EmailType = {
   id: number;
@@ -13,7 +13,7 @@ class Email {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -32,11 +32,11 @@ class Email {
       return result.rows[0];
     });
   }
-  async getEmails(id: string): Promise<EmailType[]> {
+  async getEmails(user_id: string): Promise<EmailType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SELECT * FROM emails WHERE user_id=$1',
-        values: [id]
+        values: [user_id]
       };
       const result = await connection.query(query);
       return result.rows;
@@ -45,7 +45,7 @@ class Email {
   async updateEmail(id: string, e: EmailType): Promise<EmailType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'UPDATE emails SET email=$2, is_default=FALSE, is_verified=FALSE WHERE id=$1 RETURNING *',
+        text: 'UPDATE emails SET email=$2, is_default=false, is_verified=false WHERE id=$1 RETURNING *',
         values: [id, e.email]
       };
       const result = await connection.query(query);

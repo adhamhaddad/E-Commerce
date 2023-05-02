@@ -11,13 +11,14 @@ import {
   updatePhone,
   deletePhone
 } from '../../controllers/phones';
+import { verifyToken } from '../../middlewares/verifyToken';
 
 const router = Router();
 
 router
-  .post('/', validateCreatePhone, createPhone)
-  .get('/:id', validateGetPhones, getPhones)
-  .patch('/:id', validateUpdatePhone, updatePhone)
-  .delete('/:id', validateDeletePhone, deletePhone);
+  .post('/', validateCreatePhone, verifyToken, createPhone)
+  .get('/:user_id', validateGetPhones, verifyToken, getPhones)
+  .patch('/:id', validateUpdatePhone, verifyToken, updatePhone)
+  .delete('/:id', validateDeletePhone, verifyToken, deletePhone);
 
 export default router;

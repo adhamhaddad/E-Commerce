@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 
 type AttributeValueType = {
   id: number;
@@ -11,7 +11,7 @@ class AttributeValue {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {

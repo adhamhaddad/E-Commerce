@@ -1,8 +1,9 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 
 type UserAddressType = {
   id: number;
+  country?: string;
   city: string;
   postal_code: number;
   address1: string;
@@ -14,7 +15,7 @@ class UserAddress {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -33,11 +34,11 @@ class UserAddress {
       return result.rows[0];
     });
   }
-  async getUserAddresses(id: string): Promise<UserAddressType[]> {
+  async getUserAddresses(user_id: string): Promise<UserAddressType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SElECT * FROM user_addresses WHERE user_id=$1',
-        values: [id]
+        values: [user_id]
       };
       const result = await connection.query(query);
       return result.rows;

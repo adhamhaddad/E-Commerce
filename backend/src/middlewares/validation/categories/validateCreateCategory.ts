@@ -12,11 +12,19 @@ export const validateCreateCategory = [
     .withMessage('name must be a string'),
   body('slug')
     .exists()
-    .withMessage('slug is missing from the body')
+    .withMessage("slug doesn't exists in the body.")
     .notEmpty()
     .withMessage('slug is empty')
     .isString()
     .withMessage('slug must be a string'),
+  // .isLength({ min: 3, max: 50 })
+  // .withMessage('slug must be at least 3 and maximum 50 letters'),
+  body('icon_url').custom((value, { req }) => {
+    if (!req.file) {
+      throw new Error('File is required');
+    }
+    return true;
+  }),
   body('user_id')
     .exists()
     .withMessage('user_id is missing from the body')

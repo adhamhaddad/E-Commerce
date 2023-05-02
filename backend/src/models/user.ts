@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 import { EmailType } from './email';
 import Password, { PasswordType } from './password';
 
@@ -8,11 +8,13 @@ export enum UserRole {
   CLIENT = 0
 }
 export type UserType = {
-  id?: number;
+  id: number;
   first_name: string;
   last_name: string;
   role: UserRole;
-  joined?: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 };
 
 export type UserTypes = UserType & PasswordType & EmailType;
@@ -20,7 +22,7 @@ class User {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -75,7 +77,7 @@ class User {
   async updateUser(id: string, u: UserType): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'UPDATE users SET first_name=$2, last_name=$3 WHERE id=$1 RETURNING *',
+        text: 'UPDATE users SET first_name=$2, last_name=$3, updated_at=CURRENT_TIMESTAMP WHERE id=$1 RETURNING *',
         values: [id, u.first_name, u.last_name]
       };
       const result = await connection.query(query);
@@ -86,7 +88,7 @@ class User {
   async deleteUser(id: string): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'DELETE FROM Users WHERE id=$1 RETURNING id',
+        text: 'DELETE FROM users WHERE id=$1 RETURNING id',
         values: [id]
       };
       const result = await connection.query(query);

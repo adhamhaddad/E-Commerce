@@ -3,13 +3,22 @@ import {
   validateLogin,
   validateRegister
 } from '../../middlewares/validation/auth';
-import { authUser, createUser, refreshToken } from '../../controllers/auth';
+import {
+  authUser,
+  createUser,
+  updatePassword,
+  refreshAccessToken
+} from '../../controllers/auth';
+import { validateUpdatePassword } from '../../middlewares/validation/passwords';
+import { authMe } from '../../utils/token';
 
 const router = Router();
 
 router
   .post('/register', validateRegister, createUser)
   .post('/login', validateLogin, authUser)
-  .get('/refresh-token', refreshToken);
+  .patch('/reset-password', validateUpdatePassword, updatePassword)
+  .post('/refresh-token', refreshAccessToken)
+  .get('/auth-me', authMe);
 
 export default router;

@@ -1,5 +1,6 @@
 import { authUser } from './login';
 import { createUser } from './register';
-import { refreshToken } from './refreshToken';
+import { updatePassword } from './updatePassword';
+import { refreshAccessToken } from './refreshAccessToken';
 
-export { authUser, createUser, refreshToken };
+export { authUser, createUser, updatePassword, refreshAccessToken };

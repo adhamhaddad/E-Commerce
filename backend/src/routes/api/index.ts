@@ -3,12 +3,13 @@ import user from './user';
 import email from './emails';
 import userAddress from './userAddress';
 import phone from './phone';
+import icons from './icons';
 import categories from './categories';
 import subCategories from './subCategories';
-import icons from './icons';
-import tags from './tags';
+import products from './products';
 import attributeNames from './attributeNames';
 import attributeValues from './attributeValues';
+import orders from './orders';
 
 export {
   auth,
@@ -16,10 +17,11 @@ export {
   email,
   phone,
   userAddress,
+  icons,
   categories,
   subCategories,
-  icons,
-  tags,
+  products,
   attributeNames,
-  attributeValues
+  attributeValues,
+  orders
 };

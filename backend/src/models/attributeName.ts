@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 
 type AttributeNameType = {
   id: number;
@@ -11,7 +11,7 @@ class AttributeName {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -30,11 +30,11 @@ class AttributeName {
       return result.rows[0];
     });
   }
-  async getAttributeNames(id: string): Promise<AttributeNameType[]> {
+  async getAttributeNames(variant_id: string): Promise<AttributeNameType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SELECT * FROM attribute_names WHERE variant_id=$1',
-        values: [id]
+        values: [variant_id]
       };
       const result = await connection.query(query);
       return result.rows;

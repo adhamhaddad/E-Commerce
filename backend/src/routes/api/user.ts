@@ -5,11 +5,13 @@ import {
   validateUpdateUser,
   validateDeleteUser
 } from '../../middlewares/validation/users';
+import { verifyToken } from '../../middlewares/verifyToken';
 
 const router = Router();
+
 router
-  .get('/:id', validateGetUser, getUser)
-  .patch('/:id', validateUpdateUser, updateUser)
-  .delete('/:id', validateDeleteUser, deleteUser);
+  .get('/:id', validateGetUser, verifyToken, getUser)
+  .patch('/:id', validateUpdateUser, verifyToken, updateUser)
+  .delete('/:id', validateDeleteUser, verifyToken, deleteUser);
 
 export default router;

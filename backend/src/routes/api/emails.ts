@@ -11,13 +11,14 @@ import {
   updateEmail,
   deleteEmail
 } from '../../controllers/emails';
+import { verifyToken } from '../../middlewares/verifyToken';
 
 const router = Router();
 
 router
-  .post('/', validateCreateEmail, createEmail)
-  .get('/:id', validateGetEmails, getEmails)
-  .patch('/:id', validateUpdateEmail, updateEmail)
-  .delete('/:id', validateDeleteEmail, deleteEmail);
+  .post('/', validateCreateEmail, verifyToken, createEmail)
+  .get('/:user_id', validateGetEmails, verifyToken, getEmails)
+  .patch('/:id', validateUpdateEmail, verifyToken, updateEmail)
+  .delete('/:id', validateDeleteEmail, verifyToken, deleteEmail);
 
 export default router;

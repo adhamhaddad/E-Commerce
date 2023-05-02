@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { body, check } from 'express-validator';
+import { check, body } from 'express-validator';
 import { validate } from '../validationResult';
 
 export const validateUpdateSubCategory = [
@@ -9,15 +9,21 @@ export const validateUpdateSubCategory = [
     .notEmpty()
     .withMessage('id is empty'),
   body('name')
-    .exists()
-    .withMessage('city is missing from the body')
+    .withMessage("name does'nt exists in the body.")
     .notEmpty()
-    .isString(),
+    .withMessage('name is empty')
+    .isString()
+    .withMessage('name must be a string'),
+  // .isLength({ min: 4, max: 50 })
+  // .withMessage('name must be at least 4 and maximum 50 letters'),
   body('slug')
     .exists()
-    .withMessage('postal_code is missing from the body')
+    .withMessage("slug doesn't exists in the body.")
     .notEmpty()
-    .isNumeric()
-    .withMessage('postal_code must be a number'),
+    .withMessage('slug is empty')
+    .isString()
+    .withMessage('slug must be a string'),
+  // .isLength({ min: 3, max: 50 })
+  // .withMessage('slug must be at least 3 and maximum 50 letters'),
   (req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ];

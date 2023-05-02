@@ -1,9 +1,11 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 
 type PhoneType = {
   id: number;
   phone: string;
+  is_default: boolean;
+  is_verified: boolean;
   user_id: number;
 };
 
@@ -11,7 +13,7 @@ class Phone {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -30,11 +32,11 @@ class Phone {
       return result.rows[0];
     });
   }
-  async getPhones(id: string): Promise<PhoneType[]> {
+  async getPhones(user_id: string): Promise<PhoneType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SELECT * FROM phones WHERE user_id=$1',
-        values: [id]
+        values: [user_id]
       };
       const result = await connection.query(query);
       return result.rows;
@@ -43,7 +45,7 @@ class Phone {
   async updatePhone(id: string, p: PhoneType): Promise<PhoneType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'UPDATE phones SET phone=$2, is_default=FALSE, is_verified=FALSE WHERE id=$1 RETURNING *',
+        text: 'UPDATE phones SET phone=$2, is_default=false, is_verified=false WHERE id=$1 RETURNING *',
         values: [id, p.phone]
       };
       const result = await connection.query(query);

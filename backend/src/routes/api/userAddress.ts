@@ -11,13 +11,14 @@ import {
   updateUserAddress,
   deleteUserAddress
 } from '../../controllers/userAddress';
+import { verifyToken } from '../../middlewares/verifyToken';
 
 const router = Router();
 
 router
-  .post('/', validateCreateUserAddress, createUserAddress)
-  .get('/:id', validateGetUserAddresses, getUserAddresses)
-  .patch('/:id', validateUpdateUserAddress, updateUserAddress)
-  .delete('/:id', validateDeleteUserAddress, deleteUserAddress);
+  .post('/', validateCreateUserAddress, verifyToken, createUserAddress)
+  .get('/:user_id', validateGetUserAddresses, verifyToken, getUserAddresses)
+  .patch('/:id', validateUpdateUserAddress, verifyToken, updateUserAddress)
+  .delete('/:id', validateDeleteUserAddress, verifyToken, deleteUserAddress);
 
 export default router;

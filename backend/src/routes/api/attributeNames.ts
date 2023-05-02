@@ -13,14 +13,20 @@ import {
   updateAttributeName,
   deleteAttributeName
 } from '../../controllers/attributeNames';
+import { verifyToken } from '../../middlewares/verifyToken';
 
 const router = Router();
 
 router
-  .post('/', validateCreateAttributeName, createAttributeName)
-  .get('/:id', validateGetAttributeNames, getAttributeNames)
-  .get('/:id', validateGetAttributeName, getAttributeName)
-  .patch('/:id', validateUpdateAttributeName, updateAttributeName)
-  .delete('/:id', validateDeleteAttributeName, deleteAttributeName);
+  .post('/', validateCreateAttributeName, verifyToken, createAttributeName)
+  .get('/:id', validateGetAttributeNames, verifyToken, getAttributeNames)
+  .get('/:id', validateGetAttributeName, verifyToken, getAttributeName)
+  .patch('/:id', validateUpdateAttributeName, verifyToken, updateAttributeName)
+  .delete(
+    '/:id',
+    validateDeleteAttributeName,
+    verifyToken,
+    deleteAttributeName
+  );
 
 export default router;

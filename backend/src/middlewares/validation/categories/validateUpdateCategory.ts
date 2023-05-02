@@ -10,14 +10,25 @@ export const validateUpdateCategory = [
     .withMessage('id is empty'),
   body('name')
     .exists()
-    .withMessage('city is missing from the body')
+    .withMessage('name is missing from the body')
     .notEmpty()
-    .isString(),
+    .withMessage('name is empty')
+    .isString()
+    .withMessage('name must be a string'),
   body('slug')
     .exists()
-    .withMessage('postal_code is missing from the body')
+    .withMessage("slug does'nt exists in the body.")
     .notEmpty()
-    .isNumeric()
-    .withMessage('postal_code must be a number'),
+    .withMessage('slug is empty')
+    .isString()
+    .withMessage('slug must be a string'),
+    // .isLength({ min: 3, max: 50 })
+    // .withMessage('slug must be at least 3 and maximum 50 letters'),
+  body('icon_url').custom((value, { req }) => {
+    if (!req.file) {
+      throw new Error('File is required');
+    }
+    return true;
+  }),
   (req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ];

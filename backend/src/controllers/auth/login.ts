@@ -1,24 +1,40 @@
 import { Request, Response } from 'express';
+import { setAccessToken, setRefreshToken } from '../../utils/token';
 import Auth from '../../models/auth';
-import { signAccessToken, signRefreshToken } from '../../utils/token';
+import configs from '../../configs';
 
 const auth = new Auth();
 
 export const authUser = async (req: Request, res: Response) => {
   try {
+    // Authenticate the user and generate an access token and refresh token
     const response = await auth.authUser(req.body);
-    const accessToken = await signAccessToken(response);
-    const refreshToken = await signRefreshToken(response);
+    const accessToken = await setAccessToken(response);
+    const refreshToken = await setRefreshToken(response);
 
+    // Set the access token as an HTTP-only cookie
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: false,
+      maxAge: configs.access_expires
+    });
+
+    // Set the refresh token as an HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: false,
+      maxAge: configs.refresh_expires
+    });
     res.status(200).json({
       status: true,
-      data: { response, accessToken, refreshToken },
+      data: { user: { ...response }, accessToken, refreshToken },
       message: 'User authenticated successfully.'
     });
-  } catch (err) {
+  } catch (error) {
     res.status(400).json({
-      status: false,
-      message: (err as Error).message
+      error: (error as Error).message
     });
   }
 };

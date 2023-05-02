@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { check } from 'express-validator';
 import { validate } from '../validationResult';
 
-export const validateDeleteTag = [
+export const validateGetOrder = [
   check('id')
     .exists()
     .withMessage('id is missing from the parameters')

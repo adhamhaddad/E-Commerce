@@ -9,7 +9,7 @@ import configs from './configs';
 import router from './routes';
 
 const app: Application = express();
-const port: number = configs.port || 80;
+const port: number = configs.port || 8080;
 const corsOptions = {
   allowedHeaders: [
     'Origin',
@@ -17,6 +17,7 @@ const corsOptions = {
     'Content-Type',
     'Accept',
     'X-Access-Token',
+    'X-Refresh-Token',
     'Authorization',
     'Access-Control-Allow-Origin',
     'Access-Control-Allow-Headers',
@@ -24,7 +25,8 @@ const corsOptions = {
   ],
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
   preflightContinue: true,
-  origin: '*'
+  origin: true,
+  credentials: true
 };
 
 // Server Middlewares
@@ -34,10 +36,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
-// Server Controllers
 app.use(router);
-router.use((_req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({
     status: false,
     message: 'Page not found!'

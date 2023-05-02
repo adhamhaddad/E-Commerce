@@ -1,4 +1,4 @@
-import database from '../../database';
+import { pgClient } from '../../database';
 import User, { UserType, UserTypes, UserRole } from '../user';
 
 const user = new User();
@@ -36,7 +36,7 @@ describe('User Model', () => {
     };
 
     beforeAll(async () => {
-      const connection = await database.connect();
+      const connection = await pgClient.connect();
       const query = {
         text: 'DELETE FROM products;\nALTER SEQUENCE products_id_seq RESTART WITH 1'
       };
@@ -45,7 +45,7 @@ describe('User Model', () => {
       await user.createUser(newUser1);
     });
     afterAll(async () => {
-      const connection = await database.connect();
+      const connection = await pgClient.connect();
       const query = {
         text: 'DELETE FROM products;\nALTER SEQUENCE products_id_seq RESTART WITH 1'
       };

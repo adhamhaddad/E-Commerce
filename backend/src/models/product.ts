@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 import { VariantType } from './variant';
 
 type ProductType = {
@@ -7,7 +7,10 @@ type ProductType = {
   name: string;
   slug: string;
   product_desc: string;
-  created_at: Date;
+  sub_category_id: number;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 };
 
 type ProductTypes = ProductType & VariantType;
@@ -16,7 +19,7 @@ class Product {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -43,28 +46,32 @@ class Product {
     return this.withConnection(async (connection: PoolClient) => {
       return this.withTransaction(connection, async () => {
         const query = {
-          text: 'INSERT INTO products (name, slug, product_desc) VALUES ($1, $2, $3) RETURNING id',
-          values: [p.name, p.slug, p.product_desc]
+          text: 'INSERT INTO products (name, slug, product_desc, sub_category_id) VALUES ($1, $2, $3, $4) RETURNING id',
+          values: [p.name, p.slug, p.product_desc, p.sub_category_id]
         };
         const result = await connection.query(query);
-        const { id } = result.rows[0];
-        const variantQuery = {
-          text: 'INSERT INTO variants (name, slug, price, quantity, product_id) VALUES ($1, $2, $3, $4, $5)',
-          values: [id]
-        };
-        await connection.query(variantQuery);
         return result.rows[0];
       });
     });
   }
-  async getProducts(id: string): Promise<ProductType[]> {
+  async getProducts(sub_category_id: string): Promise<ProductType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SELECT * FROM products WHERE sub_category_id=$1',
-        values: [id]
+        values: [sub_category_id]
       };
       const result = await connection.query(query);
       return result.rows;
+    });
+  }
+  async getProduct(id: string): Promise<ProductType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'SELECT * FROM products WHERE id=$1',
+        values: [id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
     });
   }
   async updateProduct(id: string, p: ProductType): Promise<ProductType> {

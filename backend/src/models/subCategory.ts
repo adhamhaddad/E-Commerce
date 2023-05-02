@@ -1,18 +1,21 @@
 import { PoolClient } from 'pg';
-import database from '../database';
+import { pgClient } from '../database';
 
 type SubCategoryType = {
   id: number;
   name: string;
   slug: string;
   category_id: number;
+  created_at?: Date;
+  updated_at?: Date;
+  deleted_at?: Date;
 };
 
 class SubCategory {
   async withConnection<T>(
     callback: (connection: PoolClient) => Promise<T>
   ): Promise<T> {
-    const connection = await database.connect();
+    const connection = await pgClient.connect();
     try {
       return await callback(connection);
     } catch (error) {
@@ -25,16 +28,26 @@ class SubCategory {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'INSERT INTO sub_categories (name, slug, category_id) VALUES ($1, $2, $3) RETURNING *',
-        values: [c.name, c.category_id]
+        values: [c.name, c.slug, c.category_id]
       };
       const result = await connection.query(query);
       return result.rows[0];
     });
   }
-  async getSubCategories(id: string): Promise<SubCategoryType[]> {
+  async getSubCategories(category_id: string): Promise<SubCategoryType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SELECT * FROM sub_categories WHERE category_id=$1',
+        values: [category_id]
+      };
+      const result = await connection.query(query);
+      return result.rows;
+    });
+  }
+  async getSubCategory(id: string): Promise<SubCategoryType[]> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'SELECT * FROM sub_categories WHERE id=$1',
         values: [id]
       };
       const result = await connection.query(query);
