@@ -1,42 +1,61 @@
-# E-Commerce
+# E-commerce Project
 
-## Description
+This is a basic e-commerce project for my graduation. The project is built using **React** for the front-end, **Node.js** for the back-end API, **Redis** for caching, and **PostgreSQL** for the database. The project is designed to simulate the functionality of an online store, allowing users to browse products, add them to their cart, and place orders.
 
-This is a E-commerce platform that simulates `Jumia` and `Amazon`.
+## Getting Started
 
-## Dependencies
+To get started with the project, follow these steps:
 
-- Node v14.15.1 (LTS) or more recent. While older versions can work it is advisable to keep node to latest LTS version
+    Clone the repository to your local machine.
+    Install the dependencies using npm install.
+    Set up a PostgreSQL database.
+    Set up a Redis and run the server.
+    Run the database migrations using npm run migrate:up.
+    Start the backend server using npm start.
+    Start the frontend server using npm run dev
+    Navigate to http://localhost:5173 in your web browser.
 
-- npm 6.14.8 (LTS) or more recent, Yarn can work but was not tested for this project
+[Redis Quick start](https://redis.io/docs/getting-started/)
+
+## Database Setup
+
+1. Create a new PostgreSQL database named `ecommerce`.
+   - `CREATE DATABASE ecommerce;`.
+2. Run the following commands to create a new PostgreSQL user:
+   - `CREATE ROLE admin WITH LOGIN PASSWORD 'admin';`
+   - `ALTER ROLE admin SUPERUSER CREATEROLE CREATEDB;`
+   - `GRANT ALL PRIVILEGES ON DATABASE ecommerce TO admin;`
 
 ## Installation
 
-### Database setup
+1. Clone the repository to your local machine.
+2. Navigate to the project directory and run `npm install` or `yarn` to install dependencies.
+3. Export the environment variables in `.env.example` to your environment variables file.
+4. Start the API in dev mode with `npm run dev` or `yarn dev`.
+5. Without closing the terminal, navigate to the frontend directory with `cd frontend`.
+6. Run `npm install` or `yarn` to install frontend dependencies.
+7. Start the frontend server with `npm run start` or `yarn start`.
 
-1. Open postgres terminal with: `psql postgres`
+## API Documentation
 
-1- `CREATE DATABASE ecommerce;`
+For more information on the API, please refer to the [API.md](./documents/API.md) document in the `documents` folder.
 
-2- `CREATE ROLE admin WITH PASSWORD 'admin';`
+## Usage
 
-3- `ALTER ROLE admin WITH SUPERUSER CREATEROLE CREATEDB LOGIN;`
+Once the project is installed and running, you can access the online store by navigating to the URL of the local server. You can register as a new user, browse products, add them to your cart, and place orders. As an admin, you can manage products, orders, and users through the admin panel.
 
-4- `GRANT ALL PRIVILEGES ON DATABASE ecommerce TO admin;`
+## Contributing
 
-2. Second to install the node_modules run `npm install` or `yarn`. After installation is done start the api in dev mode with `npm run dev` or `yarn dev`.
-
-3. Third without closing the terminal in step 2, navigate to the frontend `cd frontend` to intall the node_modules `npm install` or `yarn`. After installation is done start the frontend server with `npm run start` or `yarn start`.
-
-Note: open `Ecommerce/frontend/.env` to change API_URL
+This project was developed as a graduation project and is not currently accepting contributions. However, feedback and suggestions for future improvements are always welcome.
 
 ## Unit Tests
 
-No Unit test available now.
+No unit tests are available at this time.
 
 ## Built With
 
 - [React](https://reactjs.org/) - Single Page Application Library
-- [Node](https://nodejs.org) - Javascript Runtime
-- [Express](https://expressjs.com/) - Javascript API Framework
+- [Node.js](https://nodejs.org) - JavaScript Runtime
+- [Express](https://expressjs.com/) - JavaScript API Framework
+- [Redis](https://redis.io/) - In-Memory Data Store
 - [PostgreSQL](https://www.postgresql.org/) - Open Source Relational Database

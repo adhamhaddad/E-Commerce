@@ -1,0 +1,9 @@
+.input-box_label {
+    display: block;
+}
+.input-box_input {
+    height: 35px;
+    border-radius: 4px;
+    border: 1px solid #888;
+    
+}

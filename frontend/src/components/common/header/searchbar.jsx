@@ -18,6 +18,7 @@ const Searchbar = () => {
         onChange={onQueryChange}
       />
       <Button
+        text='SEARCH'
         type='button'
         style={{
           backgroundColor: 'orange',
@@ -30,9 +31,7 @@ const Searchbar = () => {
           fontWeight: 'bold'
         }}
         onClick={getProduct}
-      >
-        SEARCH
-      </Button>
+      />
     </div>
   );
 };

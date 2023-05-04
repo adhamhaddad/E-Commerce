@@ -14,12 +14,15 @@ const Input = ({
 }) => {
   return (
     <div
+      style={style}
       className={`${styles['input-box']} ${isValid ? null : styles['invalid']}`}
     >
-      <label htmlFor={id}>{label}</label>
+      <label htmlFor={id} className={styles['input-box_label']}>
+        {label}
+      </label>
       <input
+        className={styles['input-box_input']}
         type={type}
-        style={style}
         placeholder={placeholder}
         value={value}
         onChange={onChange}

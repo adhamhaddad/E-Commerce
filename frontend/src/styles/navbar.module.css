@@ -1,5 +1,4 @@
 .navbar .menu-bar {
-    width: 250px;
     height: 40px;
     display: flex;
     justify-content: space-between;
@@ -17,6 +16,7 @@
     font-weight: bold;
     color: #222;
     height: 100%;
+    padding: 0px 10px;
     align-items: center;
 }
 

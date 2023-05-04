@@ -126,6 +126,7 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100),
     product_desc TEXT,
+    price INT NOT NULL,
     sub_category_id INT NOT NULL REFERENCES sub_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,

@@ -9,16 +9,18 @@ export const validateCreateCategory = [
     .notEmpty()
     .withMessage('name is empty')
     .isString()
-    .withMessage('name must be a string'),
+    .withMessage('name must be a string')
+    .isLength({ min: 4, max: 50 })
+    .withMessage('name must be at least 4 and maximum 50 letters'),
   body('slug')
     .exists()
-    .withMessage("slug doesn't exists in the body.")
+    .withMessage('slug is missing from the body')
     .notEmpty()
     .withMessage('slug is empty')
     .isString()
-    .withMessage('slug must be a string'),
-  // .isLength({ min: 3, max: 50 })
-  // .withMessage('slug must be at least 3 and maximum 50 letters'),
+    .withMessage('slug must be a string')
+    .isLength({ min: 3, max: 50 })
+    .withMessage('slug must be at least 3 and maximum 50 letters'),
   body('icon_url').custom((value, { req }) => {
     if (!req.file) {
       throw new Error('File is required');
