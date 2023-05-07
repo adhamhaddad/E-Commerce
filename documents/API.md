@@ -274,7 +274,7 @@ The request body should be a JSON object with the following properties:
 
 ### Response
 
-If the user is a biker and valid, the server will respond with a status code of 201 and a JSON object representing the created order:
+If the user is valid, the server will respond with a status code of 201 and a JSON object representing the created phone:
 
 ```json
 {
@@ -303,7 +303,7 @@ The request headers should have the following properties:
 
 ### Response
 
-If the user is a biker and valid, the server will respond with a status code of 201 and a JSON object representing the updated order:
+If the user is valid, the server will respond with a status code of 200 and a JSON object representing the user phones array:
 
 ```json
 [
@@ -380,7 +380,7 @@ The request headers should have the following properties:
 
 ### Response
 
-If the user is a biker and valid, the server will respond with a status code of 201 and a JSON object representing the user-addresses array:
+If the user is valid, the server will respond with a status code of 200 and a JSON object representing the user-addresses array:
 
 ```json
 [
@@ -459,7 +459,7 @@ The request headers should have the following properties:
 
 ### Response
 
-If the user is a biker and valid, the server will respond with a status code of 201 and a JSON object representing the user categories array:
+If the user is valid, the server will respond with a status code of 200 and a JSON object representing the user categories array:
 
 ```json
 [
@@ -474,6 +474,38 @@ If the user is a biker and valid, the server will respond with a status code of 
         "deleted_at": null
     }
 ]
+```
+
+## GET /categories/:id
+
+Get category by id.
+
+### Request Headers
+
+The request headers should have the following properties:
+
+```json
+"headers": {
+    "Authorization": "Bearer <Access-Token>",
+    "X-Refresh-Token": "Bearer <Refresh-Token>"
+}
+```
+
+### Response
+
+If the category is valid, the server will respond with a status code of 200 and a JSON object representing the user categories array:
+
+```json
+{
+    "id": 1,
+    "name": "Electronics",
+    "slug": "electronics",
+    "icon_url": "icon_url",
+    "user_id": 1,
+    "created_at": "TIMESTAMP",
+    "updated_at": null,
+    "deleted_at": null
+}
 ```
 
 ## PATCH /categories/:id
@@ -617,7 +649,7 @@ The request headers should have the following properties:
 
 ### Response
 
-If the user is a biker and valid, the server will respond with a status code of 201 and a JSON object representing the sub-category array:
+If the category id is valid, the server will respond with a status code of 200 and a JSON object representing the sub-category array:
 
 ```json
 [
@@ -871,6 +903,185 @@ If the user and category are valid, the server will respond with a status code o
 {
     "id": 1
 }
+```
+
+<hr />
+
+## POST /variants
+
+Create a new variant.
+
+### Request Headers
+
+The request headers should have the following properties:
+
+```json
+"headers": {
+    "Authorization": "Bearer <Access-Token>",
+    "X-Refresh-Token": "Bearer <Refresh-Token>"
+}
+```
+
+### Request Body
+
+The request body should be a JSON object with the following properties:
+
+```json
+{
+    "name": "",
+    "slug": "",
+    "price": 100,
+    "quantity": 5,
+    "product_id": 1,
+}
+```
+
+### Response
+
+If the product is valid, the server will respond with a status code of 201 and a JSON object representing the variant:
+
+```json
+{
+    "id": 1,
+    "name": "",
+    "slug": "",
+    "price": 100,
+    "quantity": 5,
+    "product_id": 1,
+}
+```
+
+## GET /variants/:product_id
+
+Get the product variants.
+
+### Request Headers
+
+The request headers should have the following properties:
+
+```json
+"headers": {
+    "Authorization": "Bearer <Access-Token>",
+    "X-Refresh-Token": "Bearer <Refresh-Token>"
+}
+```
+
+### Response
+
+If the product is valid, the server will respond with a status code of 200 and a JSON object representing the variant:
+
+```json
+[
+
+    {
+        "id": 1,
+        "name": "",
+        "slug": "",
+        "price": 100,
+        "quantity": 5,
+        "product_id": 1,
+    }
+]
+```
+
+## GET /variants/:id
+
+Get the product variants.
+
+### Request Headers
+
+The request headers should have the following properties:
+
+```json
+"headers": {
+    "Authorization": "Bearer <Access-Token>",
+    "X-Refresh-Token": "Bearer <Refresh-Token>"
+}
+```
+
+### Response
+
+If the variant id is valid, the server will respond with a status code of 200 and a JSON object representing the variant:
+
+```json
+{
+    "id": 1,
+    "name": "",
+    "slug": "",
+    "price": 100,
+    "quantity": 5,
+    "product_id": 1,
+}
+
+```
+
+## PATCH /variants/:id
+
+Update variant by id.
+
+### Request Headers
+
+The request headers should have the following properties:
+
+```json
+"headers": {
+    "Authorization": "Bearer <Access-Token>",
+    "X-Refresh-Token": "Bearer <Refresh-Token>"
+}
+```
+
+### Request Body
+
+The request body should be a JSON object with the following properties:
+
+```json
+{
+    "name": "",
+    "slug": "",
+    "price": 100,
+    "quantity": 5
+}
+```
+
+### Response
+
+If the variant id is valid, the server will respond with a status code of 203 and a JSON object representing the updated variant:
+
+```json
+{
+    "id": 1,
+    "name": "",
+    "slug": "",
+    "price": 100,
+    "quantity": 5,
+    "product_id": 1,
+}
+```
+
+## DELETE /variants/:id
+
+Delete variants by id.
+
+### Request Headers
+
+The request headers should have the following properties:
+
+```json
+"headers": {
+    "Authorization": "Bearer <Access-Token>",
+    "X-Refresh-Token": "Bearer <Refresh-Token>"
+}
+```
+
+### Response
+
+If the variant id is valid, the server will respond with a status code of 200 and a JSON object representing the variant id:
+
+```json
+{
+    "id": 1
+}
+
 ```
 
 <hr />

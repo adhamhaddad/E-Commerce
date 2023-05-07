@@ -1,28 +1,29 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import {useAuth} from '../../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import styles from '../../../styles/navbar.module.css';
 
 const Navbar = () => {
-  const {user} = useAuth();
-
+  const { user } = useAuth();
   return (
     <nav className={styles['navbar']}>
       <ul className={styles['menu-bar']}>
-        {user.role === 'TENANT' && 
-        <li>
-          <NavLink to='/dashboard'>
-            <i className='fa-solid '></i>
-            <span>Dashboard</span>
-          </NavLink>
-        </li>
-        }
-        <li>
-          <NavLink to='/account'>
-            <i className='fa-solid fa-user-circle'></i>
-            <span>My Account</span>
-          </NavLink>
-        </li>
+        {user !== null && user.role === 'TENANT' && (
+          <li>
+            <NavLink to='/dashboard'>
+              <i class="fa-solid fa-gauge-high"></i>
+              <span>Dashboard</span>
+            </NavLink>
+          </li>
+        )}
+        {user !== null && user.role === 'CLIENT' && (
+          <li>
+            <NavLink to='/account'>
+              <i className='fa-solid fa-user-circle'></i>
+              <span>My Account</span>
+            </NavLink>
+          </li>
+        )}
         <li>
           <NavLink to='/orders'>
             <i className='fa-solid fa-bag-shopping'></i>

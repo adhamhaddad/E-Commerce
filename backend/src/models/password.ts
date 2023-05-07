@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import {pgClient} from '../database';
+import { pgClient } from '../database';
 import { hash as hashPass, compare } from '../utils/password';
 
 export type PasswordType = {

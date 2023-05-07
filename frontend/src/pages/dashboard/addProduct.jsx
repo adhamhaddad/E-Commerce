@@ -3,103 +3,128 @@ import Input from '../../components/UI/input';
 import Button from '../../components/UI/button';
 import { api } from '../../config';
 import styles from '../../styles/addProduct.module.css';
-import { useAuth } from '../../hooks/useAuth';
 
-const AddProduct = () => {
+const AddProduct = ({ categories }) => {
   const [values, setValues] = useState({
     name: '',
     slug: '',
     price: 0,
     product_desc: '',
-    sub_category_id: null
+    image_url: null,
+    category_id: null
   });
-  const [categories, setCategories] = useState([]);
-
-  const { user } = useAuth();
 
   const handleChange = (prop) => (event) => {
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const response = await api.post('/products', values);
-    const data = response;
-    console.log(data);
-    console.log(response.ok);
+  const handleChangeImage = (event) => {
+    setValues((prev) => ({ ...prev, image_url: event.target.files[0] }));
   };
-
-  const getCategories = async () => {
-    await api
-      .get(`/categories/${user.id}`)
-      .then((res) => setCategories(res.data))
+  const addProduct = () => {
+    const formData = new FormData();
+    formData.append('name', values.name);
+    formData.append('slug', values.slug);
+    formData.append('price', values.price);
+    formData.append('product_desc', values.product_desc);
+    formData.append('image_url', values.image_url);
+    formData.append('category_id', values.category_id);
+    api
+      .post('/products', formData)
+      .then(() =>
+        setValues({
+          name: '',
+          slug: '',
+          price: 0,
+          product_desc: '',
+          image_url: null,
+          category_id: null
+        })
+      )
       .catch((err) => console.log(err));
   };
 
-  const Inputs = [
-    {
-      id: 'name',
-      label: 'Product Name',
-      type: 'text',
-      placeholder: 'Product name',
-      value: values.name,
-      onChange: handleChange('name')
-    },
-    {
-      id: 'slug',
-      label: 'Product Slug',
-      type: 'text',
-      placeholder: 'Product slug',
-      value: values.slug,
-      onChange: handleChange('slug')
-    },
-    {
-      id: 'price',
-      label: 'Product Price',
-      type: 'number',
-      placeholder: 'Product price',
-      value: values.price,
-      onChange: handleChange('price')
-    },
-    {
-      id: 'product_desc',
-      label: 'Product Description',
-      type: 'text',
-      placeholder: 'Product description',
-      value: values.product_desc,
-      onChange: handleChange('product_desc')
-    }
-  ];
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addProduct();
+  };
 
   useEffect(() => {
-    getCategories();
     return () => {
       setValues({
         name: '',
         slug: '',
         price: 0,
-        product_desc: ''
+        product_desc: '',
+        category_id: null
       });
-      setCategories([]);
     };
   }, []);
 
+  const Inputs = [
+    {
+      key: 'name',
+      id: 'name',
+      label: 'Product Name',
+      type: 'text',
+      value: values.name,
+      onChange: handleChange('name')
+    },
+    {
+      key: 'slug',
+      id: 'slug',
+      label: 'Product Slug',
+      type: 'text',
+      value: values.slug,
+      onChange: handleChange('slug')
+    },
+    {
+      key: 'image_url',
+      id: 'image_url',
+      type: 'file',
+      label: 'Product Image',
+      onChange: handleChangeImage
+    },
+    {
+      key: 'price',
+      id: 'price',
+      label: 'Product Price',
+      type: 'number',
+      value: values.price,
+      onChange: handleChange('price')
+    }
+  ];
+
   return (
-    <div className={styles['add-product']}>
-      <form onSubmit={handleSubmit} className={styles['add-product_form']}>
-        {Inputs.map((input) => (
-          <Input {...input} />
-        ))}
-        <select onChange={handleChange('sub_category_id')}>
-          {categories.length > 0 &&
-            categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-        </select>
-        <Button text='Add Product' type='submit' onClick={handleSubmit} />
-      </form>
-    </div>
+    <>
+      <h2>Products</h2>
+      <div className={styles['add-product']}>
+        <form onSubmit={handleSubmit} className={styles['add-product_form']}>
+          {Inputs.map((input) => (
+            <Input {...input} />
+          ))}
+          <textarea
+            cols='30'
+            rows='10'
+            placeholder='Product Description'
+            value={values.product_desc}
+            onChange={handleChange('product_desc')}
+          ></textarea>
+          <select
+            onChange={handleChange('category_id')}
+            value={values.category_id}
+          >
+            <option value={null}>select category</option>
+            {categories.length > 0 &&
+              categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+          </select>
+          <Button text='Add Product' type='submit' onClick={handleSubmit} />
+        </form>
+      </div>
+    </>
   );
 };
 export default AddProduct;

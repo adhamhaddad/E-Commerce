@@ -9,6 +9,7 @@ import {
   categories,
   subCategories,
   products,
+  variants,
   attributeNames,
   attributeValues,
   orders
@@ -20,11 +21,12 @@ router.use('/auth', auth);
 router.use('/users', user);
 router.use('/emails', email);
 router.use('/phones', phone);
-router.use('/user-address', userAddress);
+router.use('/user-addresses', userAddress);
 router.use('/icons', icons);
 router.use('/categories', categories);
 router.use('/sub-categories', subCategories);
 router.use('/products', products);
+router.use('/variants', variants);
 router.use('/attribute-names', attributeNames);
 router.use('/attribute-values', attributeValues);
 router.use('/orders', orders);

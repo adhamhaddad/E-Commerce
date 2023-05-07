@@ -1,20 +1,15 @@
 import { Request, Response } from 'express';
 import SubCategory from '../../models/subCategory';
+import { io } from '../../server';
 
 const subCategory = new SubCategory();
 
 export const createSubCategory = async (req: Request, res: Response) => {
   try {
     const response = await subCategory.createSubCategory(req.body);
-    res.status(201).json({
-      status: true,
-      data: response,
-      message: 'Sub-category created successfully.'
-    });
+    io.emit('subCategories', { action: 'CREATE', data: response });
+    res.status(201).json({ data: response });
   } catch (error) {
-    res.status(400).json({
-      status: false,
-      message: (error as Error).message
-    });
+    res.status(400).json({ message: (error as Error).message });
   }
 };

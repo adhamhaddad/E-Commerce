@@ -14,12 +14,13 @@ import {
   deleteCategory
 } from '../../controllers/categories';
 import { verifyToken } from '../../middlewares/verifyToken';
+import { upload } from '../../utils/upload';
 
 const router = Router();
 
 router
-  .post('/', validateCreateCategory, verifyToken, createCategory)
-  .get('/all/:id', validateGetCategories, verifyToken, getCategories)
+  .post('/', upload, validateCreateCategory, verifyToken, createCategory)
+  .get('/all', verifyToken, getCategories)
   .get('/:id', validateGetCategory, verifyToken, getCategory)
   .patch('/:id', validateUpdateCategory, verifyToken, updateCategory)
   .delete('/:id', validateDeleteCategory, verifyToken, deleteCategory);

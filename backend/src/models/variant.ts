@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import {pgClient} from '../database';
+import { pgClient } from '../database';
 
 export type VariantType = {
   id: number;
@@ -41,6 +41,16 @@ class Variant {
       };
       const result = await connection.query(query);
       return result.rows;
+    });
+  }
+  async getVariant(id: string): Promise<VariantType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'SELECT * FROM variants WHERE id=$1',
+        values: [id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
     });
   }
   async updateVariant(id: string, v: VariantType): Promise<VariantType> {

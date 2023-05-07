@@ -4,11 +4,11 @@ import { EmailType } from './email';
 import Password, { PasswordType } from './password';
 
 export enum UserRole {
-  TENANT = 1,
-  CLIENT = 0
+  TENANT = 'TENANT',
+  CLIENT = 'CLIENT'
 }
 export type UserType = {
-  id: number;
+  id: string;
   first_name: string;
   last_name: string;
   role: UserRole;
@@ -51,8 +51,8 @@ class User {
         const password = new Password();
 
         const query = {
-          text: 'INSERT INTO users (first_name, last_name, role) VALUES ($1, $2, $3) RETURNING *',
-          values: [u.first_name, u.last_name, u.role]
+          text: 'INSERT INTO users (first_name, last_name) VALUES ($1, $2) RETURNING *',
+          values: [u.first_name, u.last_name]
         };
         const result = await connection.query(query);
         const { id: user_id } = result.rows[0];
@@ -62,7 +62,10 @@ class User {
           values: [u.email, user_id]
         };
         await connection.query(emailQuery);
-        await password.createPassword(connection, u);
+        await password.createPassword(connection, {
+          password: u.password,
+          user_id: user_id
+        });
         return result.rows[0];
       });
     });

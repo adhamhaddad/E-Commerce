@@ -10,36 +10,58 @@ const Phone = () => {
   const [values, setValues] = useState({ phone: '' });
   const { user } = useAuth();
 
-  const getPhone = async () => {
+  const getPhones = async () => {
     await api
       .get(`/phones/${user.id}`)
       .then((res) => setPhones(res.data))
       .catch((err) => console.log(err));
   };
+  const addPhone = async () => {
+    await api
+      .post('/phones', { ...values, user_id: user.id })
+      .then((res) => {
+        setValues({ phone: '' });
+        setPhones((prev) => [...prev, res.data]);
+      })
+      .catch((err) => console.log(err));
+  };
   const handleChange = (prop) => (event) => {
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
+  const handleChangePhone = (prop) => (event) => {
+    setPhones((prev) => ({ ...prev, [prop]: event.target.value }));
+  };
 
-  const Inputs = [
-    {
-      id: 'new_phone',
-      label: 'New Phone',
-      value: values.phone,
-      onChange: handleChange('phone')
-    }
-  ];
   const handleSubmit = (event) => {
     event.preventDefault();
+    addPhone();
   };
 
   useEffect(() => {
-    // getPhone();
+    getPhones();
 
     return () => {
       setPhones([]);
       setValues({ email: '' });
     };
   }, []);
+
+  const Inputs = [
+    ...phones.map((phone) => ({
+      key: phone.id,
+      id: phone.id,
+      label: 'Phone',
+      value: phone.phone,
+      onChange: handleChangePhone('phone')
+    })),
+    {
+      key: 'new_phone',
+      id: 'new_phone',
+      label: 'New Phone',
+      value: values.phone,
+      onChange: handleChange('phone')
+    }
+  ];
 
   return (
     <div className={styles['phone']}>

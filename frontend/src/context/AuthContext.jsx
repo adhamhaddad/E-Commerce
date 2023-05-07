@@ -8,6 +8,7 @@ const auth = {
   accessToken: null,
   refreshToken: null,
   loading: true,
+  isLogged: false,
   setLoading: () => {},
   register: () => {},
   login: () => {},
@@ -21,6 +22,8 @@ const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [loading, setLoading] = useState(auth.loading);
+
+  const isLoggedIn = !!accessToken;
 
   const history = useHistory();
 
@@ -88,7 +91,7 @@ const AuthProvider = ({ children }) => {
   };
   const handleRegister = async (params, errorCallback) => {
     try {
-      const response = await api.post('/auth/register', body);
+      const response = await api.post('/auth/register', params);
       // Extract accessToken from the response body
       const { accessToken } = response;
     } catch (err) {
@@ -119,6 +122,7 @@ const AuthProvider = ({ children }) => {
     user: user,
     accessToken: accessToken,
     refreshToken: refreshToken,
+    isLogged: isLoggedIn,
     loading: loading,
     setLoading: setLoading,
     login: handleLogin,

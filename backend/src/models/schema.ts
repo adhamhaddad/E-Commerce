@@ -5,7 +5,8 @@ const connectionString =
 const pool = new Pool({ connectionString });
 
 pool
-  .query(`
+  .query(
+    `
     CREATE TABLE tenants (
         id SERIAL PRIMARY KEY,
         first_name TEXT,
@@ -147,7 +148,8 @@ pool
         account_no TEXT,
         user_id INT REFERENCES users(id)
     );
-`)
+`
+  )
   .then(() => console.log('Tables created successfully'))
   .catch((err) => console.error('Error creating tables:', err))
   .finally(() => pool.end());

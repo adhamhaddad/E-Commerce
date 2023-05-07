@@ -7,6 +7,7 @@ import icons from './icons';
 import categories from './categories';
 import subCategories from './subCategories';
 import products from './products';
+import variants from './variants';
 import attributeNames from './attributeNames';
 import attributeValues from './attributeValues';
 import orders from './orders';
@@ -21,6 +22,7 @@ export {
   categories,
   subCategories,
   products,
+  variants,
   attributeNames,
   attributeValues,
   orders

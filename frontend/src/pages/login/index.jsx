@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Input from '../../components/UI/input';
 import Button from '../../components/UI/button';
 import { useAuth } from '../../hooks/useAuth';
@@ -21,27 +22,42 @@ const Login = () => {
     login(values, (err) => console.log(err));
   };
 
+  const Inputs = [
+    {
+      id: 'email',
+      label: 'Email',
+      type: 'email',
+      placeholder: 'Email address',
+      value: values.email,
+      onChange: handleChange('email')
+    },
+    {
+      id: 'password',
+      label: 'Password',
+      type: 'password',
+      placeholder: 'Password',
+      value: values.password,
+      onChange: handleChange('password')
+    }
+  ];
+
+  useEffect(() => {
+    return () => {
+      setValues({ email: '', password: '' });
+    };
+  }, []);
   return (
     <div className={styles['login-page']}>
-      <form onSubmit={onFormSubmit}>
-        <Input
-          id='email'
-          label='Email'
-          placeholder='Email address or phone number'
-          type='email'
-          value={values.email}
-          onChange={handleChange('email')}
-        />
-        <Input
-          id='password'
-          label='Password'
-          placeholder='Password'
-          type='password'
-          value={values.password}
-          onChange={handleChange('password')}
-        />
-        <Button text='Log In' type='submit' style={{ borderRadius: '2px' }} />
+      <h2>Login Page</h2>
+      <form onSubmit={onFormSubmit} className={styles['login-page_form']}>
+        {Inputs.map((input) => (
+          <Input key={input.id} {...input} />
+        ))}
+        <Button text='Log In' type='submit' />
       </form>
+      <p>
+        Don't have account? <Link to='/register'>Register</Link> now
+      </p>
     </div>
   );
 };

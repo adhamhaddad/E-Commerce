@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import configs from '../configs';
 
-
 const hash = async (password: string) =>
   await bcrypt.hash(
     `${configs.pepper}${password}${configs.pepper}`,

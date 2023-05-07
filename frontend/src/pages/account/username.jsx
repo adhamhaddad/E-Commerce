@@ -6,14 +6,13 @@ import { useAuth } from '../../hooks/useAuth';
 import styles from '../../styles/username.module.css';
 
 const UserName = () => {
-  const [userName, setUserName] = useState({});
   const [values, setValues] = useState({ first_name: '', last_name: '' });
   const { user } = useAuth();
 
-  const getName = async () => {
+  const getUser = async () => {
     await api
-      .get(`/email/${user.id}`)
-      .then((res) => setEmails(res.data))
+      .get(`/users/${user.id}`)
+      .then((res) => setValues(res.data))
       .catch((err) => console.log(err));
   };
   const handleChange = (prop) => (event) => {
@@ -22,12 +21,14 @@ const UserName = () => {
 
   const Inputs = [
     {
+      key: 'first_name',
       id: 'first_name',
       label: 'First Name',
       value: values.first_name,
       onChange: handleChange('first_name')
     },
     {
+      key: 'last_name',
       id: 'last_name',
       label: 'Last Name',
       value: values.last_name,
@@ -39,10 +40,9 @@ const UserName = () => {
   };
 
   useEffect(() => {
-    // getEmail();
+    getUser();
 
     return () => {
-      setUserName({});
       setValues({ first_name: '', last_name: '' });
     };
   }, []);

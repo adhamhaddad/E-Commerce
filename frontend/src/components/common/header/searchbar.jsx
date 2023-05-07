@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import Button from '../../UI/button';
 import classes from '../../../styles/searchbar.module.css';
 
-const Searchbar = () => {
+const SearchBar = () => {
   const [query, setQuery] = useState('');
 
   const onQueryChange = (e) => setQuery(e.target.value);
 
-  const getProduct = () => {};
+  const getProduct = () => {
+    
+  };
 
   return (
-    <div className={classes['Searchbar']}>
+    <div className={classes['search-bar']}>
       <input
         type='search'
         placeholder='Search products, brands and categories'
@@ -36,4 +38,4 @@ const Searchbar = () => {
   );
 };
 
-export default Searchbar;
+export default SearchBar;

@@ -1,5 +1,30 @@
 -- SET client_min_messages = warning;
 -- -------------------------
+-- Database authentication
+-- -------------------------
+DROP DATABASE IF EXISTS ecommerce;
+--
+--
+CREATE DATABASE ecommerce;
+-- -------------------------
+-- Role admin
+-- -------------------------
+-- DROP ROLE IF EXISTS admin;
+--
+--
+-- CREATE ROLE admin WITH PASSWORD 'admin';
+-- -------------------------
+-- Alter Role admin
+-- -------------------------
+-- ALTER ROLE admin WITH SUPERUSER CREATEROLE CREATEDB LOGIN;
+-- -------------------------
+-- Database GRANT PRIVILEGES
+-- -------------------------
+GRANT ALL PRIVILEGES ON DATABASE ecommerce TO admin;
+-- -------------------------
+-- Connect to delivery_service database
+-- -------------------------
+\c ecommerce;
 -- Type user_role
 -- -------------------------
 DROP TYPE IF EXISTS user_role;
@@ -16,7 +41,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
-    role user_role NOT NULL,
+    role user_role DEFAULT 'CLIENT',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
@@ -81,8 +106,7 @@ DROP TABLE IF EXISTS icons;
 --
 CREATE TABLE IF NOT EXISTS icons (
     id SERIAL PRIMARY KEY,
-    icon_url TEXT NOT NULL,
-    category_id INT NOT NULL REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE
+    icon_url TEXT NOT NULL
 );
 -- -------------------------
 -- Table categories
@@ -127,7 +151,7 @@ CREATE TABLE IF NOT EXISTS products (
     slug VARCHAR(100),
     product_desc TEXT,
     price INT NOT NULL,
-    sub_category_id INT NOT NULL REFERENCES sub_categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    category_id INT NOT NULL REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
@@ -222,7 +246,7 @@ CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     -- order_item_id INT NOT NULL REFERENCES variants(id) ON UPDATE CASCADE ON DELETE CASCADE
-    order_status VARCHAR(100) DEFAULT "PENDING",
+    order_status VARCHAR(100) DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP

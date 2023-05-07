@@ -17,16 +17,18 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
     // Verify the refresh token
     const decoded = await verifyRefreshToken(token);
     // Generate a new access and refresh tokens
-    const { id, first_name, last_name } = decoded;
+    const { id, first_name, last_name, role } = decoded;
     const accessToken = await setAccessToken({
       id,
       first_name,
-      last_name
+      last_name,
+      role
     });
     const refreshToken = await setRefreshToken({
       id,
       first_name,
-      last_name
+      last_name,
+      role
     });
 
     res.cookie('accessToken', accessToken, {

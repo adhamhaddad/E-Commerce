@@ -21,7 +21,7 @@ export const setAccessToken = async (payload: Payload): Promise<string> => {
     const options: SignOptions = {
       algorithm: 'RS256',
       expiresIn: configs.access_expires,
-      issuer: 'Nodejs-Refresh-Token',
+      issuer: 'E-Commerce',
       audience: `user_id-${payload.id}`,
       subject: 'access_token'
     };

@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import Category from '../../models/category';
+import { io } from '../../server';
 
 const category = new Category();
 
 export const updateCategory = async (req: Request, res: Response) => {
   try {
     const response = await category.updateCategory(req.params.id, req.body);
+    io.emit('categories', { action: 'UPDATE', data: response });
     res.status(203).json({
       status: true,
       data: response,

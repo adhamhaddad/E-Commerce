@@ -30,17 +30,16 @@ class Auth {
   async authUser(u: AuthType): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SELECT DISTINCT p.password FROM passwords p, emails e WHERE p.user_id=e.user_id AND e.email=$1',
+        text: 'SELECT DISTINCT p.password, p.user_id FROM passwords p, emails e WHERE p.user_id=e.user_id AND e.email=$1',
         values: [u.email]
       };
       const result = await connection.query(query);
       if (result.rows.length) {
-        const { password: hash } = result.rows[0];
+        const { password: hash, user_id: id } = result.rows[0];
         const check = await compare(u.password, hash);
         if (check) {
-          const { id } = result.rows[0];
           const query = {
-            text: 'SELECT id, first_name, last_name FROM users WHERE id=$1',
+            text: 'SELECT id, first_name, last_name, role FROM users WHERE id=$1',
             values: [id]
           };
           const userResult = await connection.query(query);
@@ -48,13 +47,13 @@ class Auth {
         }
         throw new Error('Password is incorrect.');
       }
-      throw new Error(`Email not found!`);
+      throw new Error('Email not found!');
     });
   }
-  async authMe(id: string): Promise<UserType & AuthType> {
+  async authMe(id: string): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SELECT id, first_name, last_name FROM users WHERE id=$1',
+        text: 'SELECT id, first_name, last_name, role FROM users WHERE id=$1',
         values: [id]
       };
       const result = await connection.query(query);

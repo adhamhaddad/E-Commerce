@@ -5,7 +5,7 @@ const address = new UserAddress();
 
 export const getUserAddresses = async (req: Request, res: Response) => {
   try {
-    const response = await address.getUserAddresses(req.params.id);
+    const response = await address.getUserAddresses(req.params.user_id);
     res.status(200).json({
       status: true,
       data: response,

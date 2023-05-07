@@ -1,4 +1,4 @@
-.Searchbar {
+.search-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -6,7 +6,7 @@
     margin: auto;
 }
 
-.Searchbar input {
+.search-bar input {
     width: 80%;
     height: 40px;
     padding: 10px;

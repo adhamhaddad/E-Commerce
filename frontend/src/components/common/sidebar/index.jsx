@@ -1,42 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import classes from '../../../styles/sidebar.module.css';
+import { api } from '../../../config';
+import { API_URL } from '../../../config';
+import styles from '../../../styles/sidebar.module.css';
 
-const Sidebar = () => {
+const Sidebar = ({ handleChange }) => {
+  const [categories, setCategories] = useState([]);
+
+  const getCategories = async () => {
+    api
+      .get('/categories/all')
+      .then((res) => setCategories(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const list =
+    categories.length > 0 &&
+    categories.map((category) => (
+      <li key={category.id}>
+        <NavLink
+          activeClassName={styles['active']}
+          to={`/products/categories/${category.slug}`}
+          onClick={() => handleChange(category.id)}
+        >
+          <img
+            src={`${API_URL}/${category.icon_url}`}
+            crossOrigin='anonymous'
+            alt='category_icon'
+            className={styles['category_icon']}
+          />
+          <span>{category.name}</span>
+        </NavLink>
+      </li>
+    ));
+
   return (
-    <aside className={classes['sidebar']}>
-      <ul className={classes['list']}>
-        <li>
-          <NavLink to='/home'>
-            <i className='fa-solid fa-home'></i>
-            <span>Home & Office</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/home'>
-            <i className='fa-solid fa-tablet'></i>
-            <span>Phones & Tablets</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/home'>
-            <i className='fa-solid fa-heart-pulse'></i>
-            <span>Sporting Goods</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/home'>
-            <i className='fa-solid fa-gamepad'></i>
-            <span>Gaming</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/other-categories'>
-            <i className='fa-solid fa-categories'></i>
-            <span>Other categories</span>
-          </NavLink>
-        </li>
-      </ul>
+    <aside className={styles['sidebar']}>
+      <ul className={styles['list']}>{list ?? list}</ul>
     </aside>
   );
 };

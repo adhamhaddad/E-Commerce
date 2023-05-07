@@ -29,23 +29,30 @@ class Category {
   }
   async createCategory(c: CategoryType & IconType): Promise<CategoryType> {
     return this.withConnection(async (connection: PoolClient) => {
-      const { id: icon_id } = await icon
-        .createIcon(connection, c)
-        .then((result) => result);
+      const { id: icon_id } = await icon.createIcon(connection, c);
 
       const query = {
-        text: 'INSERT INTO categories (name, slug, icon_id, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
+        text: `
+            INSERT INTO categories (name, slug, icon_id, user_id)
+            VALUES ($1, $2, $3, $4)
+            RETURNING categories.*, (
+              SELECT icon_url
+              FROM icons
+              WHERE id = $3
+            ) AS icon_url`,
         values: [c.name, c.slug, icon_id, c.user_id]
       };
       const result = await connection.query(query);
       return result.rows[0];
     });
   }
-  async getCategories(user_id: string): Promise<CategoryType[]> {
+  async getCategories(): Promise<CategoryType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SELECT * FROM categories WHERE user_id=$1',
-        values: [user_id]
+        text: `
+          SELECT categories.*, icons.* FROM categories
+          JOIN icons ON categories.icon_id = icons.id
+        `
       };
       const result = await connection.query(query);
       return result.rows;
@@ -78,10 +85,16 @@ class Category {
       return result.rows[0];
     });
   }
-  async deleteCategory(id: string): Promise<CategoryType> {
+  async deleteCategory(id: string): Promise<CategoryType & IconType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'DELETE FROM categories WHERE id=$1 RETURNING id',
+        text: `
+        DELETE FROM categories WHERE id=$1
+        RETURNING categories.id, categories.icon_id, (
+          SELECT icon_url
+          FROM icons
+          WHERE id = categories.icon_id
+        ) AS icon_url`,
         values: [id]
       };
       const result = await connection.query(query);

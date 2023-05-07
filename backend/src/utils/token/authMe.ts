@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { redisClient } from '../../database';
 import configs from '../../configs';
-import { setAccessToken, verifyRefreshToken, DecodedToken, Payload } from '.';
+import { setAccessToken, verifyRefreshToken, DecodedToken } from '.';
 
 const publicAccessKey = path.join(
   __dirname,
@@ -37,19 +37,19 @@ export const authMe = async (req: Request, res: Response) => {
       const publicKey = await fs.promises.readFile(publicAccessKey, 'utf8');
       const decoded = jwt.verify(token, publicKey, {
         algorithms: ['RS256'],
-        issuer: 'Nodejs-Refresh-Token'
+        issuer: 'E-Commerce'
       }) as DecodedToken;
       const cachedToken = await redisClient.get(`access_token:${decoded.id}`);
       if (!cachedToken || cachedToken !== token) {
         throw new Error('Access token not found or expired');
       }
-      const { id, first_name, last_name } = decoded;
+      const { id, first_name, last_name, role } = decoded;
 
       req.user = { id };
 
       return res.status(200).json({
         data: {
-          user: { id, first_name, last_name },
+          user: { id, first_name, last_name, role },
           accessToken: token
         }
       });
@@ -72,14 +72,13 @@ export const authMe = async (req: Request, res: Response) => {
         );
       }
       const decoded = await verifyRefreshToken(token);
-      const { id, first_name, last_name } = decoded;
+      const { id, first_name, last_name, role } = decoded;
       const newAccessToken = await setAccessToken({
         id,
         first_name,
-        last_name
+        last_name,
+        role
       });
-      //   const refreshTokenCookie = req.cookies.refreshToken;
-      //   console.log(refreshTokenCookie);
 
       // Attach user object to request and proceed with new access token
       req.user = { id };
@@ -94,7 +93,8 @@ export const authMe = async (req: Request, res: Response) => {
           user: {
             id,
             first_name,
-            last_name
+            last_name,
+            role
           },
           accessToken: newAccessToken
         }

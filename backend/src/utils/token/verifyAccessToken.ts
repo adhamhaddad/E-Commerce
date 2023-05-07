@@ -41,7 +41,7 @@ export const verifyAccessToken = async (
       const publicKey = await fs.promises.readFile(publicAccessKey, 'utf8');
       const decoded = jwt.verify(token, publicKey, {
         algorithms: ['RS256'],
-        issuer: 'Nodejs-Refresh-Token'
+        issuer: 'E-Commerce'
       }) as DecodedToken;
       const cachedToken = await redisClient.get(`access_token:${decoded.id}`);
       if (!cachedToken || cachedToken !== token) {
@@ -68,11 +68,12 @@ export const verifyAccessToken = async (
         );
       }
       const decoded = await verifyRefreshToken(token);
-      const { id, first_name, last_name } = decoded;
+      const { id, first_name, last_name, role } = decoded;
       const newAccessToken = await setAccessToken({
         id,
         first_name,
-        last_name
+        last_name,
+        role
       });
 
       // Attach user object to request and proceed with new access token

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import SubCategory from '../../models/subCategory';
+import { io } from '../../server';
 
 const subCategory = new SubCategory();
 
@@ -9,15 +10,9 @@ export const updateSubCategory = async (req: Request, res: Response) => {
       req.params.id,
       req.body
     );
-    res.status(203).json({
-      status: true,
-      data: response,
-      message: 'Sub-categories updated successfully.'
-    });
+    io.emit('subCategories', { action: 'UPDATE', data: response });
+    res.status(203).json({ data: response });
   } catch (error) {
-    res.status(400).json({
-      status: false,
-      message: (error as Error).message
-    });
+    res.status(400).json({ message: (error as Error).message });
   }
 };

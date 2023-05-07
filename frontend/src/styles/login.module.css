@@ -1,0 +1,25 @@
+.login-page {
+    flex-grow: 1;
+    padding: 10px
+}
+
+.login-page h2 {
+    /* padding: 10px; */
+}
+
+.login-page_form {
+    margin: 20px 0px
+}
+
+.login-page form input {
+    padding: 10px;
+    margin: 10px 0px;
+}
+
+.login-page form button {
+    margin: 10px 0px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #888;
+    cursor: pointer;
+}

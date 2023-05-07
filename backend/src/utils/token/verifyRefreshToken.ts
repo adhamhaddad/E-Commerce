@@ -19,7 +19,7 @@ export const verifyRefreshToken = async (token: string): Promise<Payload> => {
     const publicKey = await fs.promises.readFile(publicRefreshKey, 'utf8');
     const decoded = jwt.verify(token, publicKey, {
       algorithms: ['RS256'],
-      issuer: 'Nodejs-Refresh-Token'
+      issuer: 'E-Commerce'
     }) as Payload;
     const cachedToken = await redisClient.get(`refresh_token:${decoded.id}`);
     if (!cachedToken || cachedToken !== token) {

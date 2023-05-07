@@ -34,12 +34,12 @@ export const validateCreateProduct = [
     }
     return true;
   }),
-  body('sub_category_id')
+  body('category_id')
     .exists()
-    .withMessage('sub_category_id is missing from the body')
+    .withMessage('category_id is missing from the body')
     .notEmpty()
-    .withMessage('sub_category_id is empty')
+    .withMessage('category_id is empty')
     .isNumeric()
-    .withMessage('sub_category_id must be a number'),
+    .withMessage('category_id must be a number'),
   (req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ];

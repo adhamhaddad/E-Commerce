@@ -1,16 +1,10 @@
 import React from 'react';
-import Header from './components/common/header';
 import Main from './components/common/main';
-import Footer from './components/common/footer';
+import { connect } from 'socket.io-client';
 
+const socket = connect('http://localhost:8000');
 const App = () => {
-  return (
-    <>
-      <Header />
-      <Main />
-      <Footer />
-    </>
-  );
+  return <Main socket={socket} />;
 };
 
 export default App;
