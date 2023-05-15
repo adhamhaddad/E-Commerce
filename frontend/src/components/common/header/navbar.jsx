@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
-import styles from '../../../styles/navbar.module.css';
+import { useAuth } from '@hooks';
+import styles from '@styles/navbar.module.css';
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -11,7 +11,7 @@ const Navbar = () => {
         {user !== null && user.role === 'TENANT' && (
           <li>
             <NavLink to='/dashboard'>
-              <i class="fa-solid fa-gauge-high"></i>
+              <i className="fa-solid fa-gauge-high"></i>
               <span>Dashboard</span>
             </NavLink>
           </li>

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { api } from '../../../config';
-import { API_URL } from '../../../config';
-import styles from '../../../styles/sidebar.module.css';
+import { useApi, API_URL } from '@config';
+import styles from '@styles/sidebar.module.css';
 
-const Sidebar = ({ handleChange }) => {
+const Sidebar = () => {
   const [categories, setCategories] = useState([]);
+  const { get, post, loading } = useApi();
 
   const getCategories = async () => {
-    api
-      .get('/categories/all')
+    await get('/categories/all')
       .then((res) => setCategories(res.data))
       .catch((err) => console.log(err));
   };
@@ -24,8 +23,9 @@ const Sidebar = ({ handleChange }) => {
       <li key={category.id}>
         <NavLink
           activeClassName={styles['active']}
-          to={`/products/categories/${category.slug}`}
-          onClick={() => handleChange(category.id)}
+          to={`/products?category=${category.slug.trim()}&id=${
+            category.id ?? ''
+          }`}
         >
           <img
             src={`${API_URL}/${category.icon_url}`}

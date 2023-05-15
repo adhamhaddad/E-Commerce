@@ -1,13 +1,12 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { api } from '../config';
+import { useApi } from '../config';
 
 const auth = {
   user: localStorage.getItem('user'),
   accessToken: null,
   refreshToken: null,
-  loading: true,
   isLogged: false,
   setLoading: () => {},
   register: () => {},
@@ -21,7 +20,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(auth.user && JSON.parse(auth.user));
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
-  const [loading, setLoading] = useState(auth.loading);
+  const { get, post } = useApi();
 
   const isLoggedIn = !!accessToken;
 
@@ -31,11 +30,8 @@ const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       const accessToken = window.localStorage.getItem('accessToken');
       if (accessToken) {
-        setLoading(true);
-        await api
-          .get('/auth/auth-me')
+        await get('/auth/auth-me')
           .then(async (response) => {
-            setLoading(false);
             const { user: userData, accessToken: AccessToken } = response.data;
             if (accessToken) {
               window.localStorage.setItem('user', JSON.stringify(userData));
@@ -51,10 +47,7 @@ const AuthProvider = ({ children }) => {
             setUser(null);
             setAccessToken(null);
             setRefreshToken(null);
-            setLoading(false);
           });
-      } else {
-        setLoading(false);
       }
     };
     initAuth();
@@ -62,7 +55,7 @@ const AuthProvider = ({ children }) => {
 
   const handleLogin = async (params, errorCallback) => {
     try {
-      const response = await api.post('/auth/login', params);
+      const response = await post('/auth/login', params);
       // Extract user, accessToken, refreshToken from the response body
       const { user, accessToken, refreshToken } = response.data;
 
@@ -84,16 +77,19 @@ const AuthProvider = ({ children }) => {
         secure: true,
         sameSite: 'strict'
       });
-      history.replace('/');
+      history.replace('/products');
     } catch (err) {
       if (errorCallback) errorCallback(err);
     }
   };
   const handleRegister = async (params, errorCallback) => {
     try {
-      const response = await api.post('/auth/register', params);
-      // Extract accessToken from the response body
-      const { accessToken } = response;
+      const response = await post('/auth/register', params);
+      if (response.data.error) {
+        if (errorCallback) errorCallback(response.data.error);
+      } else {
+        handleLogin({ email: params.email, password: params.password });
+      }
     } catch (err) {
       if (errorCallback) errorCallback(err);
     }
@@ -123,8 +119,6 @@ const AuthProvider = ({ children }) => {
     accessToken: accessToken,
     refreshToken: refreshToken,
     isLogged: isLoggedIn,
-    loading: loading,
-    setLoading: setLoading,
     login: handleLogin,
     register: handleRegister,
     logout: handleLogout

@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import Button from '../../UI/button';
-import classes from '../../../styles/searchbar.module.css';
+import { useHistory } from 'react-router-dom';
+import Button from '@UI/button';
+import classes from '@styles/searchbar.module.css';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
+  const history = useHistory();
 
   const onQueryChange = (e) => setQuery(e.target.value);
-
-  const getProduct = () => {
-    
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const trimmedQuery = query.trim();
+    trimmedQuery.length > 0 && history.push(`/products/search?name=${query}`);
   };
 
   return (
-    <div className={classes['search-bar']}>
+    <form className={classes['search-bar']} onSubmit={handleSubmit}>
       <input
         type='search'
         placeholder='Search products, brands and categories'
@@ -21,20 +24,12 @@ const SearchBar = () => {
       />
       <Button
         text='SEARCH'
-        type='button'
+        type='submit'
         style={{
-          backgroundColor: 'orange',
-          borderRadius: '4px',
-          width: '150px',
-          height: '40px',
-          color: 'white',
-          border: 'none',
-          boxShadow: '0px 0px 10px 2px #ddd',
-          fontWeight: 'bold'
+          
         }}
-        onClick={getProduct}
       />
-    </div>
+    </form>
   );
 };
 

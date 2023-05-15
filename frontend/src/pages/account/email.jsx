@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import { api } from '../../config';
-import { useAuth } from '../../hooks/useAuth';
-import styles from '../../styles/email.module.css';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import { useApi } from '@config';
+import { useAuth } from '@hooks';
+import styles from '@styles/email.module.css';
 
 const Email = () => {
   const [emails, setEmails] = useState([]);
   const [values, setValues] = useState({ email: '' });
   const { user } = useAuth();
+  const { get, post, loading } = useApi();
 
   const getEmails = async () => {
-    await api
-      .get(`/emails/${user.id}`)
+    await get(`/emails/${user.id}`)
       .then((res) => setEmails(res.data))
       .catch((err) => console.log(err));
   };
   const addEmail = async () => {
-    await api
-      .post('/emails', { ...values, user_id: user.id })
+    await post('/emails', { ...values, user_id: user.id })
       .then((res) => {
         setValues({ email: '' });
         setEmails((prev) => [...prev, res.data]);

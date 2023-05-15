@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import styles from '../../styles/register.module.css';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@hooks';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import styles from '@styles/form.module.css';
 
 const Register = () => {
   const [values, setValues] = useState({
@@ -34,7 +35,6 @@ const Register = () => {
       id: 'first_name',
       label: 'First Name',
       type: 'text',
-      placeholder: 'First Name',
       value: values.first_name,
       onChange: handleChange('first_name')
     },
@@ -42,7 +42,6 @@ const Register = () => {
       id: 'last_name',
       label: 'Last Name',
       type: 'text',
-      placeholder: 'Last Name',
       value: values.last_name,
       onChange: handleChange('last_name')
     },
@@ -50,7 +49,6 @@ const Register = () => {
       id: 'email',
       label: 'Email Address',
       type: 'email',
-      placeholder: 'Email Address',
       value: values.email,
       onChange: handleChange('email')
     },
@@ -58,7 +56,6 @@ const Register = () => {
       id: 'password',
       label: 'New Password',
       type: 'password',
-      placeholder: 'New Password',
       value: values.password,
       onChange: handleChange('password')
     }
@@ -66,13 +63,16 @@ const Register = () => {
 
   return (
     <div className={styles['register-page']}>
-      <form onSubmit={handleSubmit}>
+      <h2>Register Page</h2>
+      <form onSubmit={handleSubmit} className={styles['form']}>
         {Inputs.map((input) => (
           <Input key={input.id} {...input} />
         ))}
         <Button text='Register' type='submit' onClick={handleSubmit} />
       </form>
-      <p>Already have an account? Login Now</p>
+      <p>
+        Already have an account? <Link to='/login'>Login</Link> Now
+      </p>
     </div>
   );
 };

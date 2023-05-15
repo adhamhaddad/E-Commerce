@@ -1,24 +1,36 @@
 import React, { useState } from 'react';
-import { API_URL } from '../../../config';
-import Button from '../button';
-import styles from '../../../styles/card.module.css';
+import { useHistory } from 'react-router-dom';
+import { API_URL } from '@config';
+import Button from '@UI/button';
+import styles from '@styles/card.module.css';
 
 const Card = ({ id, name, image_url, price }) => {
-  const [count, setCount] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const history = useHistory();
 
   const handleCounter = (type) => {
     if (type === 'decrement') {
-      setCount((prev) => (prev > 0 ? prev - 1 : 0));
+      setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
     } else {
-      setCount((prev) => prev + 1);
+      setQuantity((prev) => prev + 1);
     }
   };
   const handleChange = (event) => {
-    setCount(Number(event.target.value));
+    setQuantity(Number(event.target.value));
   };
 
-  const handleAddToCart = ({ id, count }) => {
-    console.log(id, count);
+  const handleClick = (id) => {
+    history.push(`/product?id=${id}`);
+  };
+
+  const handleAddToCart = () => {
+    const existingCartItems =
+      JSON.parse(localStorage.getItem('cartItems')) || [];
+    const newCartItem = { ...product, quantity };
+    localStorage.setItem(
+      'cartItems',
+      JSON.stringify([...existingCartItems, newCartItem])
+    );
   };
 
   return (
@@ -28,14 +40,14 @@ const Card = ({ id, name, image_url, price }) => {
           src={`${API_URL}/${image_url}`}
           crossOrigin='anonymous'
           alt={name}
+          onClick={() => handleClick(id)}
         />
       </div>
       <span className={styles['product-name']}>{name}</span>
       <span className={styles['price']}>{price} EGP</span>
       <div className={styles['controller']}>
         <button onClick={() => handleCounter('increment')}>+</button>
-        {/* <span>{count}</span> */}
-        <input type='text' value={count} onChange={handleChange} />
+        <input type='text' value={quantity} onChange={handleChange} />
         <button onClick={() => handleCounter('decrement')}>-</button>
       </div>
       <Button

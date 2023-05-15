@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import { useAuth } from '../../hooks/useAuth';
-import styles from '../../styles/login.module.css';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import { useAuth } from '@hooks';
+import styles from '@styles/form.module.css';
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -27,7 +27,6 @@ const Login = () => {
       id: 'email',
       label: 'Email',
       type: 'email',
-      placeholder: 'Email address',
       value: values.email,
       onChange: handleChange('email')
     },
@@ -35,7 +34,6 @@ const Login = () => {
       id: 'password',
       label: 'Password',
       type: 'password',
-      placeholder: 'Password',
       value: values.password,
       onChange: handleChange('password')
     }
@@ -49,7 +47,7 @@ const Login = () => {
   return (
     <div className={styles['login-page']}>
       <h2>Login Page</h2>
-      <form onSubmit={onFormSubmit} className={styles['login-page_form']}>
+      <form onSubmit={onFormSubmit} className={styles['form']}>
         {Inputs.map((input) => (
           <Input key={input.id} {...input} />
         ))}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useState } from 'react';
 import { API_URL } from './env';
 import Cookies from 'js-cookie';
 
@@ -35,4 +36,45 @@ api.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-export default api;
+function useApi() {
+  const [loading, setLoading] = useState(false);
+
+  async function get(url, options = {}) {
+    setLoading(true);
+    try {
+      const response = await api.get(url, options);
+      setLoading(false);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  }
+
+  async function post(url, data) {
+    setLoading(true);
+    try {
+      const response = await api.post(url, data);
+      setLoading(false);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  }
+  async function deleteFunc(url, data) {
+    setLoading(true);
+    try {
+      const response = await api.post(url, data);
+      setLoading(false);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  }
+
+  return { get, post, loading };
+}
+
+export default useApi;

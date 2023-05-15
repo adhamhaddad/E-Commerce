@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import { api } from '../../config';
-import { useAuth } from '../../hooks/useAuth';
-import styles from '../../styles/addCategory.module.css';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import { useApi } from '@config';
+import { useAuth } from '@hooks';
+import styles from '@styles/addCategory.module.css';
 
 const AddCategory = ({ list, setCategories }) => {
   const [values, setValues] = useState({
@@ -12,6 +12,8 @@ const AddCategory = ({ list, setCategories }) => {
     icon_url: null
   });
   const { user } = useAuth();
+  const { get, post, loading } = useApi();
+
   const addCategory = async () => {
     const formData = new FormData();
     formData.append('name', values.name);
@@ -19,8 +21,7 @@ const AddCategory = ({ list, setCategories }) => {
     formData.append('icon_url', values.icon_url);
     formData.append('user_id', user.id);
 
-    api
-      .post('/categories', formData)
+    await post('/categories', formData)
       .then((res) => {
         setCategories((prev) => [...prev, res.data]);
         setValues({

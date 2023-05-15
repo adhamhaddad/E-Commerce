@@ -1,40 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import { api } from '../../config';
-import styles from '../../styles/addProduct.module.css';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import { useApi } from '@config';
+import styles from '@styles/addProduct.module.css';
 
 const AddProduct = ({ categories }) => {
   const [values, setValues] = useState({
     name: '',
     slug: '',
     price: 0,
+    quantity: 0,
     product_desc: '',
     image_url: null,
     category_id: null
   });
-
+  const { get, post, loading } = useApi();
   const handleChange = (prop) => (event) => {
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
   const handleChangeImage = (event) => {
     setValues((prev) => ({ ...prev, image_url: event.target.files[0] }));
   };
-  const addProduct = () => {
+  const addProduct = async () => {
     const formData = new FormData();
     formData.append('name', values.name);
     formData.append('slug', values.slug);
     formData.append('price', values.price);
+    formData.append('quantity', values.quantity);
     formData.append('product_desc', values.product_desc);
     formData.append('image_url', values.image_url);
     formData.append('category_id', values.category_id);
-    api
-      .post('/products', formData)
+    await post('/products', formData)
       .then(() =>
         setValues({
           name: '',
           slug: '',
           price: 0,
+          quantity: 0,
           product_desc: '',
           image_url: null,
           category_id: null
@@ -91,6 +93,14 @@ const AddProduct = ({ categories }) => {
       type: 'number',
       value: values.price,
       onChange: handleChange('price')
+    },
+    {
+      key: 'quantity',
+      id: 'quantity',
+      label: 'Product Quantity',
+      type: 'number',
+      value: values.quantity,
+      onChange: handleChange('quantity')
     }
   ];
 

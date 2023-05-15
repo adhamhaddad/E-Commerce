@@ -1,12 +1,10 @@
 import React from 'react';
-import Routes from '../../../config/routes';
-import Footer from '../footer';
-import styles from '../../../styles/main.module.css';
-const Main = () => {
+import Routes from '@config/routes';
+import styles from '@styles/main.module.css';
+const Main = ({ socket }) => {
   return (
     <main className={styles['main']}>
-      <Routes />
-      <Footer />
+      <Routes socket={socket} />
     </main>
   );
 };

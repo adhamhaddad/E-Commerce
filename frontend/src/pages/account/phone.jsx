@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import { api } from '../../config';
-import { useAuth } from '../../hooks/useAuth';
-import styles from '../../styles/phone.module.css';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import { useApi } from '@config';
+import { useAuth } from '@hooks';
+import styles from '@styles/phone.module.css';
 
 const Phone = () => {
   const [phones, setPhones] = useState([]);
   const [values, setValues] = useState({ phone: '' });
   const { user } = useAuth();
+  const { get, post, loading } = useApi();
 
   const getPhones = async () => {
-    await api
-      .get(`/phones/${user.id}`)
+    await get(`/phones/${user.id}`)
       .then((res) => setPhones(res.data))
       .catch((err) => console.log(err));
   };
   const addPhone = async () => {
-    await api
-      .post('/phones', { ...values, user_id: user.id })
+    await post('/phones', { ...values, user_id: user.id })
       .then((res) => {
         setValues({ phone: '' });
         setPhones((prev) => [...prev, res.data]);

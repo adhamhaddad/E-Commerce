@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import Input from '../../components/UI/input';
-import Button from '../../components/UI/button';
-import { api } from '../../config';
-import { useAuth } from '../../hooks/useAuth';
-import styles from '../../styles/username.module.css';
+import Input from '@UI/input';
+import Button from '@UI/button';
+import { useApi } from '@config';
+import { useAuth } from '@hooks';
+import styles from '@styles/username.module.css';
 
 const UserName = () => {
   const [values, setValues] = useState({ first_name: '', last_name: '' });
   const { user } = useAuth();
+  const { get, post, loading } = useApi();
 
   const getUser = async () => {
-    await api
-      .get(`/users/${user.id}`)
+    await get(`/users/${user.id}`)
       .then((res) => setValues(res.data))
       .catch((err) => console.log(err));
   };
