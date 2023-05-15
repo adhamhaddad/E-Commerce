@@ -1,10 +1,11 @@
 import { PoolClient } from 'pg';
 import { pgClient } from '../database';
+import OrderItem, { OrderItemType } from './orderItems';
 
 type OrderType = {
   id?: number;
   user_id: number;
-  order_items_id: number;
+  items: [{ product_id: number; quantity: number }];
   order_status: string;
   created_at?: Date;
   updated_at?: Date;
@@ -38,14 +39,38 @@ class Order {
       throw error;
     }
   }
-  async createOrder(o: OrderType): Promise<OrderType> {
+  async createOrder(o: OrderType & OrderItemType): Promise<OrderType> {
     return this.withConnection(async (connection: PoolClient) => {
-      const query = {
-        text: 'INSERT INTO orders (user_id, order_items_id) VALUES ($1, $2) RETURNING *',
-        values: [o.user_id, o.order_items_id]
-      };
-      const result = await connection.query(query);
-      return result.rows[0];
+      return this.withTransaction(connection, async () => {
+        const orderItem = new OrderItem();
+        // INSERT orderItems data
+        const numericItems = o.items.map((item) => ({
+          product_id: item.product_id,
+          quantity: item.quantity
+        }));
+        const orderItemResult = await orderItem.createOrderItem(
+          connection,
+          numericItems
+        );
+        console.log(orderItemResult);
+        // INSERT order data
+        const query = {
+          text: 'INSERT INTO orders (user_id) VALUES ($1) RETURNING *',
+          values: [o.user_id]
+        };
+        const result = await connection.query(query);
+        const { order_id } = result.rows[0];
+
+        // INSERT order item bridge data
+        const orderItemBridgeQuery = orderItemResult.map((item) => ({
+          text: 'INSERT INTO order_items_bridge (item_id, order_id) VALUES ($1, $2) RETURNING *',
+          values: [item.id, order_id]
+        }));
+        const orderItemBridgeResult = await Promise.all(
+          orderItemBridgeQuery.map((query) => connection.query(query))
+        );
+        return result.rows[0];
+      });
     });
   }
   async getOrders(user_id: string): Promise<OrderType[]> {

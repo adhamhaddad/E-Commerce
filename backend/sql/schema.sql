@@ -1,6 +1,6 @@
 -- SET client_min_messages = warning;
 -- -------------------------
--- Database authentication
+-- Database ecommerce
 -- -------------------------
 DROP DATABASE IF EXISTS ecommerce;
 --
@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS products (
     slug VARCHAR(100),
     product_desc TEXT,
     price INT NOT NULL,
+    quantity INT NOT NULL,
     category_id INT NOT NULL REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
@@ -232,7 +233,7 @@ DROP TABLE IF EXISTS order_items;
 --
 CREATE TABLE IF NOT EXISTS order_items (
     id SERIAL PRIMARY KEY,
-    variant_id INT NOT NULL REFERENCES variants(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    product_id INT NOT NULL REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE,
     price INT NOT NULL,
     quantity INT NOT NULL
 );
@@ -245,11 +246,21 @@ DROP TABLE IF EXISTS orders;
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    -- order_item_id INT NOT NULL REFERENCES variants(id) ON UPDATE CASCADE ON DELETE CASCADE
     order_status VARCHAR(100) DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
+);
+-- -------------------------
+-- Table orders
+-- -------------------------
+DROP TABLE IF EXISTS order_items_bridge;
+--
+--
+CREATE TABLE IF NOT EXISTS order_items_bridge (
+    order_id INT NOT NULL REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    item_id INT NOT NULL REFERENCES order_items(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    PRIMARY KEY (order_id, item_id)
 );
 -- -------------------------
 -- Table shipments
@@ -260,5 +271,6 @@ DROP TABLE IF EXISTS shipments;
 CREATE TABLE IF NOT EXISTS shipments (
     id SERIAL PRIMARY KEY,
     order_id INT NOT NULL REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    shipment_date DATE NOT NULL
+    shipment_date DATE NOT NULL,
+    updated_at TIMESTAMP
 );

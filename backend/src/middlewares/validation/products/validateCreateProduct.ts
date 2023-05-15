@@ -34,6 +34,16 @@ export const validateCreateProduct = [
     }
     return true;
   }),
+  body('price')
+    .exists()
+    .withMessage('price is missing from the body')
+    .notEmpty()
+    .withMessage('price is empty'),
+  body('quantity')
+    .exists()
+    .withMessage('quantity is missing from the body')
+    .notEmpty()
+    .withMessage('quantity is empty'),
   body('category_id')
     .exists()
     .withMessage('category_id is missing from the body')

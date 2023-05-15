@@ -1,10 +1,11 @@
 import { PoolClient } from 'pg';
 import { pgClient } from '../database';
 
-type OrderItemType = {
+export type OrderItemType = {
   id?: number;
-  variant_id: number;
-  user_id: number;
+  // variant_id?: number;
+  product_id: number;
+  quantity: number;
 };
 
 class OrderItem {
@@ -34,16 +35,22 @@ class OrderItem {
       throw error;
     }
   }
-  async createOrderItem(o: OrderItemType): Promise<OrderItemType> {
-    return this.withConnection(async (connection: PoolClient) => {
-      const query = {
-        text: 'INSERT INTO order_items (variant_id, user_id) VALUES ($1, $2) RETURNING *',
-        values: [o.variant_id, o.user_id]
-      };
-      const result = await connection.query(query);
-      return result.rows[0];
-    });
+  async createOrderItem(
+    connection: PoolClient,
+    items: { product_id: number; quantity: number }[]
+  ): Promise<OrderItemType[]> {
+    const query = {
+      text: 'INSERT INTO order_items (product_id, price, quantity) SELECT id, price, $1 FROM products WHERE id = ANY($2) RETURNING *',
+      values: [
+        items.map((item) => item.quantity).flat(),
+        items.map((item) => item.product_id)
+      ]
+    };
+    const result = await connection.query(query);
+    console.log(result.rows);
+    return result.rows;
   }
+
   async getOrderItems(user_id: string): Promise<OrderItemType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {

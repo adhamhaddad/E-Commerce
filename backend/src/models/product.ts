@@ -14,6 +14,7 @@ type ProductType = {
   slug: string;
   product_desc: string;
   price: string;
+  quantity: number;
   category_id: number;
   created_at?: Date;
   updated_at?: Date;
@@ -53,8 +54,15 @@ class Product {
     return this.withConnection(async (connection: PoolClient) => {
       return this.withTransaction(connection, async () => {
         const query = {
-          text: 'INSERT INTO products (name, slug, product_desc, price, category_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-          values: [p.name, p.slug, p.product_desc, p.price, p.category_id]
+          text: 'INSERT INTO products (name, slug, product_desc, price, quantity, category_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+          values: [
+            p.name,
+            p.slug,
+            p.product_desc,
+            p.price,
+            p.quantity,
+            p.category_id
+          ]
         };
         const result = await connection.query(query);
         const { id: product_id } = result.rows[0];
@@ -108,6 +116,21 @@ class Product {
       };
       const result = await connection.query(query);
       return result.rows[0];
+    });
+  }
+  async getProductBySearch(name: string): Promise<ProductType[]> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: `
+            SELECT p.*, pi.image_url 
+            FROM products p 
+            INNER JOIN product_images pi ON p.id = pi.product_id 
+            WHERE p.name LIKE $1
+        `,
+        values: [`%${name}%`]
+      };
+      const result = await connection.query(query);
+      return result.rows;
     });
   }
   async updateProduct(id: string, p: ProductType): Promise<ProductType> {

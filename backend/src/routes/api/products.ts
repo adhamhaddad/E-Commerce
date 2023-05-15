@@ -3,6 +3,7 @@ import {
   validateCreateProduct,
   validateGetProducts,
   validateGetProduct,
+  validateGetProductBySearch,
   validateUpdateProduct,
   validateDeleteProduct
 } from '../../middlewares/validation/products';
@@ -11,6 +12,7 @@ import {
   getProducts,
   getProduct,
   getAllProducts,
+  getProductBySearch,
   updateProduct,
   deleteProduct
 } from '../../controllers/products';
@@ -23,6 +25,7 @@ router
   .post('/', products, validateCreateProduct, verifyToken, createProduct)
   .get('/all', verifyToken, getAllProducts)
   .get('/all/:category_id', validateGetProducts, verifyToken, getProducts)
+  .get('/search', validateGetProductBySearch, verifyToken, getProductBySearch)
   .get('/:id', validateGetProduct, verifyToken, getProduct)
   .patch('/:id', validateUpdateProduct, verifyToken, updateProduct)
   .delete('/:id', validateDeleteProduct, verifyToken, deleteProduct);
