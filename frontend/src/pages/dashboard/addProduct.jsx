@@ -12,7 +12,7 @@ const AddProduct = ({ categories }) => {
     quantity: 0,
     product_desc: '',
     image_url: null,
-    category_id: null
+    category_id: ''
   });
   const { get, post, loading } = useApi();
   const handleChange = (prop) => (event) => {
@@ -39,7 +39,7 @@ const AddProduct = ({ categories }) => {
           quantity: 0,
           product_desc: '',
           image_url: null,
-          category_id: null
+          category_id: ''
         })
       )
       .catch((err) => console.log(err));
@@ -57,7 +57,7 @@ const AddProduct = ({ categories }) => {
         slug: '',
         price: 0,
         product_desc: '',
-        category_id: null
+        category_id: ''
       });
     };
   }, []);
@@ -108,7 +108,7 @@ const AddProduct = ({ categories }) => {
     <>
       <h2>Products</h2>
       <div className={styles['add-product']}>
-        <form onSubmit={handleSubmit} className={styles['add-product_form']}>
+        <form onSubmit={handleSubmit} className={styles['form']}>
           {Inputs.map((input) => (
             <Input {...input} />
           ))}
@@ -123,7 +123,7 @@ const AddProduct = ({ categories }) => {
             onChange={handleChange('category_id')}
             value={values.category_id}
           >
-            <option value={null}>select category</option>
+            <option value=''>select category</option>
             {categories.length > 0 &&
               categories.map((category) => (
                 <option key={category.id} value={category.id}>

@@ -3,21 +3,38 @@
     justify-content: space-between;
 }
 
-.add-category form {
+.form {
     width: 300px;
 }
-.add-category form div {
+
+.form input {
     width: 100%;
-    margin: 10px 0px
 }
-.add-category form div input {
+
+.form input:focus {
+    border: none;
+    outline: 2px solid orange;
+}
+
+.form button {
     width: 100%;
+    display: block;
+    padding: 10px;
+    font-weight: bold;
+    margin: 10px 0px;
+    border-radius: 4px;
+    border: none;
+    background-color: orange;
+    color: #FFF;
+    cursor: pointer;
+    transition: background .5s ease-in-out;
 }
 
 .categories-list {
     /* background-color: orange; */
     width: 300px;
 }
+
 .categories-list li {
     display: flex;
     width: 90%;
@@ -42,13 +59,6 @@
     border-radius: 4px;
     padding: 0px 5px;
     cursor: pointer;
-}
-
-.add-category .add-category_form button {
-    border: 1px solid #888;
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 10px;
 }
 
 .category_icon {

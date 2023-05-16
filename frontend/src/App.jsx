@@ -4,7 +4,6 @@ import { useAuth } from '@hooks';
 import { connect } from 'socket.io-client';
 import Header from '@common/header';
 import Main from '@common/main';
-import Footer from '@common/footer';
 import RegisterPage from '@pages/register';
 import LoginPage from '@pages/login';
 
@@ -25,7 +24,6 @@ const App = () => {
           <Main socket={socket} />
         </Route>
       </Switch>
-      <Footer />
     </>
   ) : (
     <>

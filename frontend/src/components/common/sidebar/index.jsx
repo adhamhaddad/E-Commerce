@@ -13,19 +13,16 @@ const Sidebar = () => {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    getCategories();
-  }, []);
-
   const list =
     categories.length > 0 &&
     categories.map((category) => (
       <li key={category.id}>
         <NavLink
-          activeClassName={styles['active']}
+          exact
           to={`/products?category=${category.slug.trim()}&id=${
             category.id ?? ''
           }`}
+          activeClassName={styles['active']}
         >
           <img
             src={`${API_URL}/${category.icon_url}`}
@@ -38,9 +35,20 @@ const Sidebar = () => {
       </li>
     ));
 
+  useEffect(() => {
+    getCategories();
+  }, []);
+
   return (
     <aside className={styles['sidebar']}>
-      <ul className={styles['list']}>{list ?? list}</ul>
+      <ul className={styles['list']}>
+        <li>
+          <NavLink to='/products?category=all'>
+            <span>All</span>
+          </NavLink>
+        </li>
+        {list && list}
+      </ul>
     </aside>
   );
 };

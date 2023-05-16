@@ -11,31 +11,33 @@ const Navbar = () => {
         {user !== null && user.role === 'TENANT' && (
           <li>
             <NavLink to='/dashboard'>
-              <i className="fa-solid fa-gauge-high"></i>
+              <i className='fa-solid fa-gauge-high'></i>
               <span>Dashboard</span>
             </NavLink>
           </li>
         )}
         {user !== null && user.role === 'CLIENT' && (
-          <li>
-            <NavLink to='/account'>
-              <i className='fa-solid fa-user-circle'></i>
-              <span>My Account</span>
-            </NavLink>
-          </li>
+          <>
+            <li>
+              <NavLink to='/account'>
+                <i className='fa-solid fa-user-circle'></i>
+                <span>My Account</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to='/orders'>
+                <i className='fa-solid fa-bag-shopping'></i>
+                <span>Orders</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to='/cart'>
+                <i className='fa-solid fa-shopping-cart'></i>
+                <span>Cart</span>
+              </NavLink>
+            </li>
+          </>
         )}
-        <li>
-          <NavLink to='/orders'>
-            <i className='fa-solid fa-bag-shopping'></i>
-            <span>Orders</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to='/cart'>
-            <i className='fa-solid fa-shopping-cart'></i>
-            <span>Cart</span>
-          </NavLink>
-        </li>
       </ul>
     </nav>
   );

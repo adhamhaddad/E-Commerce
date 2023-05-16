@@ -26,11 +26,11 @@ const Routes = ({ socket }) => {
                 render={() => <HomePage socket={socket} />}
               />
               <Route exact path='/product' component={ProductPage} />
-              <Route exact path='/dashboard' component={DashboardPage} />
+              <Route path='/dashboard' component={DashboardPage} />
               <Route exact path='/account' component={NotFoundPage} />
               <Route exact path='/about' component={AboutPage} />
-              <Route exact path='/orders' component={OrderPage} />
-              <Route exact path='/cart' component={CartPage} />
+              <Route exact path='/orders' component={NotFoundPage} />
+              <Route exact path='/cart' component={NotFoundPage} />
               <Route exact path='/' component={NotFoundPage} />
             </>
           )}
@@ -43,7 +43,7 @@ const Routes = ({ socket }) => {
                 render={() => <HomePage socket={socket} />}
               />
               <Route exact path='/product' component={ProductPage} />
-              <Route exact path='/dashboard' component={NotAuthorizedPage} />
+              <Route path='/dashboard' component={NotAuthorizedPage} />
               <Route exact path='/account' component={AccountPage} />
               <Route exact path='/about' component={AboutPage} />
               <Route exact path='/orders' component={OrderPage} />

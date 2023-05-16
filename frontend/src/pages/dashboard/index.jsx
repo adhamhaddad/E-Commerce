@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Switch, Route, Link, NavLink } from 'react-router-dom';
 import { useApi, API_URL } from '@config';
 import { useAuth } from '@hooks';
 import Button from '@UI/button';
@@ -56,8 +56,32 @@ const Dashboard = () => {
   }, []);
   return (
     <div className={styles['dashboard-page']}>
-      <AddCategory list={list} setCategories={setCategories} />
-      <AddProduct categories={categories} />
+      <div className={styles['dashboard-switch']}>
+        <NavLink to='/dashboard' activeClassName={styles['active']} exact>
+          Add Categories
+        </NavLink>
+        <NavLink
+          to='/dashboard/add-products'
+          activeClassName={styles['active']}
+          exact
+        >
+          Add Products
+        </NavLink>
+      </div>
+      <Switch>
+        <Route
+          exact
+          path='/dashboard'
+          render={() => (
+            <AddCategory list={list} setCategories={setCategories} />
+          )}
+        />
+        <Route
+          exact
+          path='/dashboard/add-products'
+          render={() => <AddProduct categories={categories} />}
+        />
+      </Switch>
       <Button text='Logout' type='button' onClick={logout} />
     </div>
   );

@@ -83,20 +83,17 @@ const AddCategory = ({ list, setCategories }) => {
   ];
 
   return (
-    <>
-      <h2>Categories</h2>
-      <div className={styles['add-category']}>
-        <form onSubmit={handleSubmit} className={styles['add-category_form']}>
-          {Inputs.map((input) => (
-            <Input {...input} />
-          ))}
-          <Button text='Add Category' type='submit' onClick={handleSubmit} />
-        </form>
-        <div className={styles['categories-list']}>
-          <ul>{list ?? list}</ul>
-        </div>
+    <div className={styles['add-category']}>
+      <form onSubmit={handleSubmit} className={styles['form']}>
+        {Inputs.map((input) => (
+          <Input {...input} />
+        ))}
+        <Button text='Add Category' type='submit' onClick={handleSubmit} />
+      </form>
+      <div className={styles['categories-list']}>
+        <ul>{list ?? list}</ul>
       </div>
-    </>
+    </div>
   );
 };
 export default AddCategory;

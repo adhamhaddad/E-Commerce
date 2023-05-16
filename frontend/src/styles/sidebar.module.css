@@ -1,13 +1,14 @@
 .sidebar {
-    height: 60vh;
-    width: 200px;
+    height: 80vh;
+    min-width: 200px;
+    max-width: 300px;
+    overflow-y: auto;
+    background-color: #FFF;
 }
 
 .sidebar .list li {
     display: block;
     margin-bottom: 5px;
-    border-radius: 4px;
-    overflow: hidden;
 }
 
 .sidebar .list li a {
@@ -17,7 +18,10 @@
     padding: 5px 10px;
     font-size: 14px;
     align-items: center;
-    background-color: #FFF;
+}
+
+.sidebar .list li a:hover {
+    background-color: #eee;
 }
 
 .sidebar .list li:last-child {
@@ -29,9 +33,4 @@
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
-}
-
-.sidebar .list li a.active {
-    background-color: #eee;
-    border: 2px solid #FFF;
 }

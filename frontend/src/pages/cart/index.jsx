@@ -27,26 +27,12 @@ const Cart = () => {
       );
     }
   };
-  // const handleAddToCart = (product) => {
-  //   const itemExists = items.find((item) => item.product_id === product.id);
-  //   if (itemExists) {
-  //     setItems((prev) =>
-  //       prev.map((item) => {
-  //         if (item.product_id === product.id) {
-  //           return { ...item, quantity: item.quantity + 1 };
-  //         }
-  //         return item;
-  //       })
-  //     );
-  //   } else {
-  //     setItems((prev) => [
-  //       ...prev,
-  //       { product_id: product.id, quantity: 1, price: product.price }
-  //     ]);
-  //   }
-  // };
+  
   const handleRemoveItem = (id) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
+    // Update localStorage
+    const updatedCartItems = items.filter((item) => item.id !== id);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
   };
   const addOrder = async () => {
     await post('/orders', {

@@ -1,6 +1,29 @@
 .dashboard-page {
     padding: 10px;
 }
+
+.dashboard-switch {
+    /* background-color: green; */
+    display: flex;
+    width: fit-content;
+    justify-content: space-between;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid orange;
+}
+
+.dashboard-switch a {
+    padding: 10px 0px;
+    width: 150px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.dashboard-switch a.active {
+    background-color: orange;
+    color: #FFF;
+}
+
 .categories-list li {
     display: flex;
     overflow: hidden;

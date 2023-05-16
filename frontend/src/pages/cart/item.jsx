@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@UI/button';
+import { API_URL } from '@config';
 import styles from '@styles/item.module.css';
 
 const Item = ({
@@ -14,7 +15,7 @@ const Item = ({
   return (
     <li key={id} className={styles['cart-item']}>
       <img
-        src={`${image_url}`}
+        src={`${API_URL}/${image_url}`}
         crossOrigin='anonymous'
         alt='product-image'
         className={styles['cart-item_image']}

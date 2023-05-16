@@ -41,7 +41,12 @@ const Products = () => {
     ));
 
   useEffect(() => {
-    if (category === null && id === null && name === null) getAllProducts();
+    if (
+      (category === 'all' || category === null) &&
+      id === null &&
+      name === null
+    )
+      getAllProducts();
     if (category !== null && id !== null && name === null) getProducts();
     if (category === null && id === null && name !== null) getProductBySearch();
 
