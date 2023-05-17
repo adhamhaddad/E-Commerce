@@ -5,7 +5,7 @@ export type OrderItemType = {
   id?: number;
   // variant_id?: number;
   product_id: number;
-  quantity: number;
+  quantity: string;
 };
 
 class OrderItem {
@@ -37,18 +37,24 @@ class OrderItem {
   }
   async createOrderItem(
     connection: PoolClient,
-    items: { product_id: number; quantity: number }[]
+    items: { product_id: number; quantity: string }[]
   ): Promise<OrderItemType[]> {
-    const query = {
-      text: 'INSERT INTO order_items (product_id, price, quantity) SELECT id, price, $1 FROM products WHERE id = ANY($2) RETURNING *',
-      values: [
-        items.map((item) => item.quantity).flat(),
-        items.map((item) => item.product_id)
-      ]
-    };
-    const result = await connection.query(query);
-    console.log(result.rows);
-    return result.rows;
+    const orderItems: OrderItemType[] = [];
+
+    for (const item of items) {
+      const quantity = Number(item.quantity);
+      if (isNaN(quantity)) {
+        throw new Error(`Invalid quantity: ${item.quantity}`);
+      }
+
+      const query = {
+        text: 'INSERT INTO order_items (product_id, price, quantity) SELECT id, price, $1 FROM products WHERE id = $2 RETURNING *',
+        values: [quantity, item.product_id]
+      };
+      const result = await connection.query(query);
+      orderItems.push(result.rows[0]);
+    }
+    return orderItems;
   }
 
   async getOrderItems(user_id: string): Promise<OrderItemType[]> {

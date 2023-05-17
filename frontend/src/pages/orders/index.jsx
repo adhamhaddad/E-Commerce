@@ -6,14 +6,15 @@ import styles from '@styles/orders.module.css';
 const Order = () => {
   const [orders, setOrders] = useState([]);
   const { user } = useAuth();
-  const { get, post, loading } = useApi();
+  const { get, loading } = useApi();
 
   const orderList =
     orders.length > 0 &&
     orders.map((order) => (
       <tr key={order.id}>
-        <td>product['description'] </td>
-        <td>product['price'] </td>
+        <td>{order.id}</td>
+        <td>{order.order_status}</td>
+        <td>{new Date(order.created_at).toLocaleString('en-US', {dateStyle: 'short', timeStyle: 'short'})}</td>
       </tr>
     ));
 
@@ -33,13 +34,12 @@ const Order = () => {
       <table>
         <thead>
           <tr>
-            <th>Product Name</th>
-            <th>Count</th>
-            <th>Price</th>
+            <th>ID</th>
             <th>status</th>
+            <th>created at</th>
           </tr>
         </thead>
-        <tbody>{orderList ?? orderList}</tbody>
+        <tbody>{orderList && orderList}</tbody>
       </table>
     </div>
   );

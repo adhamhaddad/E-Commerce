@@ -1,0 +1,28 @@
+.product-page {
+    height: 90vh;
+}
+
+.product-view {
+    display: flex;
+    margin: 20px;
+}
+
+.product-view strong {
+    display: inline-block;
+}
+
+.product-image {
+    width: 200px;
+}
+
+.product-image img {
+    display: block;
+    width: 100%;
+}
+
+.product-name {
+    display: block;
+    margin: 10px 0px;
+    font-weight: bold;
+    font-size: 18px;
+}

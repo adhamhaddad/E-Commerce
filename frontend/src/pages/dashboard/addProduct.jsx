@@ -8,13 +8,13 @@ const AddProduct = ({ categories }) => {
   const [values, setValues] = useState({
     name: '',
     slug: '',
+    image_url: null,
     price: 0,
     quantity: 0,
     product_desc: '',
-    image_url: null,
     category_id: ''
   });
-  const { get, post, loading } = useApi();
+  const { post, loading } = useApi();
   const handleChange = (prop) => (event) => {
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };

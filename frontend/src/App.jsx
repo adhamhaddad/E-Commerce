@@ -10,7 +10,7 @@ import LoginPage from '@pages/login';
 const socket = connect('http://localhost:8000');
 const App = () => {
   const { isLogged, user } = useAuth();
-  return isLogged ? (
+  return user ? (
     <>
       <Header />
       <Switch>
