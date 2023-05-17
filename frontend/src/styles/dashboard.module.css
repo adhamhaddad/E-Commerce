@@ -1,5 +1,6 @@
 .dashboard-page {
     padding: 10px;
+    height: 90vh;
 }
 
 .dashboard-switch {
@@ -10,6 +11,7 @@
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid orange;
+    margin: 10px 0px 40px 0px;
 }
 
 .dashboard-switch a {

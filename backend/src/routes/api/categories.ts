@@ -15,11 +15,19 @@ import {
 } from '../../controllers/categories';
 import { verifyToken } from '../../middlewares/verifyToken';
 import { upload } from '../../utils/upload';
+import { checkFolder } from '../../utils/checkUpload';
 
 const router = Router();
 
 router
-  .post('/', upload, validateCreateCategory, verifyToken, createCategory)
+  .post(
+    '/',
+    checkFolder,
+    upload,
+    validateCreateCategory,
+    verifyToken,
+    createCategory
+  )
   .get('/all', verifyToken, getCategories)
   .get('/:id', validateGetCategory, verifyToken, getCategory)
   .patch('/:id', validateUpdateCategory, verifyToken, updateCategory)

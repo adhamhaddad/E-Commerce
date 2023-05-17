@@ -143,10 +143,14 @@ class Product {
       return result.rows[0];
     });
   }
-  async deleteProduct(id: string): Promise<ProductType> {
+  async deleteProduct(id: string): Promise<ProductType & ProductImage> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'DELETE FROM products WHERE id=$1 RETURNING id',
+        text: `
+            DELETE FROM products
+            WHERE id=$1
+            RETURNING id,
+            (SELECT image_url FROM product_images WHERE product_id=$1 LIMIT 1) AS image_url`,
         values: [id]
       };
       const result = await connection.query(query);

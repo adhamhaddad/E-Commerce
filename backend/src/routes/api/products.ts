@@ -18,11 +18,19 @@ import {
 } from '../../controllers/products';
 import { verifyToken } from '../../middlewares/verifyToken';
 import { products } from '../../utils/upload';
+import { checkFolder } from '../../utils/checkUpload';
 
 const router = Router();
 
 router
-  .post('/', products, validateCreateProduct, verifyToken, createProduct)
+  .post(
+    '/',
+    checkFolder,
+    products,
+    validateCreateProduct,
+    verifyToken,
+    createProduct
+  )
   .get('/all', verifyToken, getAllProducts)
   .get('/all/:category_id', validateGetProducts, verifyToken, getProducts)
   .get('/search', validateGetProductBySearch, verifyToken, getProductBySearch)

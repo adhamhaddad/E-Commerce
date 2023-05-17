@@ -5,7 +5,6 @@ import path from 'path';
 import { io } from '../../server';
 
 const category = new Category();
-
 const upload = path.join(__dirname, '..', '..', '..');
 export const deleteCategory = async (req: Request, res: Response) => {
   try {

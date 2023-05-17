@@ -65,7 +65,7 @@ function useApi() {
   async function deleteFunc(url, data) {
     setLoading(true);
     try {
-      const response = await api.post(url, data);
+      const response = await api.delete(url, data);
       setLoading(false);
       return response;
     } catch (error) {
@@ -74,7 +74,7 @@ function useApi() {
     }
   }
 
-  return { get, post, loading };
+  return { get, post, deleteFunc, loading };
 }
 
 export default useApi;
