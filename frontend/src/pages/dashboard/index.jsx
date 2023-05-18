@@ -56,6 +56,7 @@ const Dashboard = () => {
   }, []);
   return (
     <div className={styles['dashboard-page']}>
+      <h1>Same Page</h1>
       <div className={styles['dashboard-switch']}>
         <NavLink to='/dashboard' activeClassName={styles['active']} exact>
           Add Categories

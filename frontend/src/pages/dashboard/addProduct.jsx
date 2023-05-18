@@ -105,36 +105,33 @@ const AddProduct = ({ categories }) => {
   ];
 
   return (
-    <>
-      <h2>Products</h2>
-      <div className={styles['add-product']}>
-        <form onSubmit={handleSubmit} className={styles['form']}>
-          {Inputs.map((input) => (
-            <Input {...input} />
-          ))}
-          <textarea
-            cols='30'
-            rows='10'
-            placeholder='Product Description'
-            value={values.product_desc}
-            onChange={handleChange('product_desc')}
-          ></textarea>
-          <select
-            onChange={handleChange('category_id')}
-            value={values.category_id}
-          >
-            <option value=''>select category</option>
-            {categories.length > 0 &&
-              categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-          </select>
-          <Button text='Add Product' type='submit' onClick={handleSubmit} />
-        </form>
-      </div>
-    </>
+    <div className={styles['add-product']}>
+      <form onSubmit={handleSubmit} className={styles['form']}>
+        {Inputs.map((input) => (
+          <Input {...input} />
+        ))}
+        <textarea
+          cols='30'
+          rows='10'
+          placeholder='Product Description'
+          value={values.product_desc}
+          onChange={handleChange('product_desc')}
+        ></textarea>
+        <select
+          onChange={handleChange('category_id')}
+          value={values.category_id}
+        >
+          <option value=''>select category</option>
+          {categories.length > 0 &&
+            categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+        </select>
+        <Button text='Add Product' type='submit' onClick={handleSubmit} />
+      </form>
+    </div>
   );
 };
 export default AddProduct;

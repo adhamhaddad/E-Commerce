@@ -1,13 +1,13 @@
+.login-page,
+.register-page {
+    transform: translateY(50%);
+}
+
 .register-page p,
 .register-page h2,
 .login-page p,
 .login-page h2 {
     text-align: center;
-}
-
-.register-page h2,
-.login-page h2 {
-    margin-top: 100px;
 }
 
 .form {
