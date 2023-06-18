@@ -13,6 +13,7 @@ const Order = () => {
     orders.map((order) => (
       <tr key={order.id}>
         <td>{order.id}</td>
+        <td>{order.tracking_number}</td>
         <td>{order.order_status}</td>
         <td>{new Date(order.created_at).toLocaleString('en-US', {dateStyle: 'short', timeStyle: 'short'})}</td>
       </tr>
@@ -35,6 +36,7 @@ const Order = () => {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Tracking Number</th>
             <th>status</th>
             <th>created at</th>
           </tr>

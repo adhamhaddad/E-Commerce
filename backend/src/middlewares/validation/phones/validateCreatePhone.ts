@@ -5,11 +5,11 @@ import { validate } from '../validationResult';
 export const validateCreatePhone = [
   body('phone')
     .exists()
-    .withMessage('phone is missing from the body')
+    .withMessage('Phone number is missing from the body')
     .notEmpty()
-    .withMessage('phone is empty')
+    .withMessage('Phone number is empty')
     .isMobilePhone('ar-EG')
-    .withMessage('phone is not valid'),
+    .withMessage('Phone number is not valid'),
   body('user_id')
     .exists()
     .withMessage('user_id is missing from the body')

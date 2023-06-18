@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   auth,
   user,
+  admin,
   email,
   phone,
   userAddress,
@@ -19,6 +20,7 @@ const router = Router();
 
 router.use('/auth', auth);
 router.use('/users', user);
+router.use('/admins', admin);
 router.use('/emails', email);
 router.use('/phones', phone);
 router.use('/user-addresses', userAddress);

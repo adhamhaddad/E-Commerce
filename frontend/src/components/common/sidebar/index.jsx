@@ -5,10 +5,10 @@ import styles from '@styles/sidebar.module.css';
 
 const Sidebar = () => {
   const [categories, setCategories] = useState([]);
-  const { get, post, loading } = useApi();
+  const { get, loading } = useApi();
 
   const getCategories = async () => {
-    await get('/categories/all')
+    await get('/categories')
       .then((res) => setCategories(res.data))
       .catch((err) => console.log(err));
   };
@@ -47,7 +47,8 @@ const Sidebar = () => {
             <span>All</span>
           </NavLink>
         </li>
-        {list && list}
+        {loading && 'Loading'}
+        {!loading && list && list}
       </ul>
     </aside>
   );

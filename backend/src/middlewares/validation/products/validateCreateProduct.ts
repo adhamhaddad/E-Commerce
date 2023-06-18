@@ -10,7 +10,7 @@ export const validateCreateProduct = [
     .withMessage('name is empty')
     .isString()
     .withMessage('name must be a string')
-    .isLength({ min: 4, max: 50 })
+    .isLength({ min: 4, max: 100 })
     .withMessage('name must be at least 4 and maximum 50 letters'),
   body('slug')
     .exists()
@@ -19,7 +19,7 @@ export const validateCreateProduct = [
     .withMessage('slug is empty')
     .isString()
     .withMessage('slug must be a string')
-    .isLength({ min: 3, max: 50 })
+    .isLength({ min: 3, max: 100 })
     .withMessage('slug must be at least 3 and maximum 50 letters'),
   body('product_desc')
     .exists()

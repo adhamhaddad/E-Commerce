@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
   validateCreateCategory,
-  validateGetCategories,
+  validateGetAdminCategories,
   validateGetCategory,
   validateUpdateCategory,
   validateDeleteCategory
@@ -9,6 +9,7 @@ import {
 import {
   createCategory,
   getCategories,
+  getAdminCategories,
   getCategory,
   updateCategory,
   deleteCategory
@@ -28,9 +29,22 @@ router
     verifyToken,
     createCategory
   )
-  .get('/all', verifyToken, getCategories)
+  .get('/', verifyToken, getCategories)
+  .get(
+    '/admin/all/:user_id',
+    validateGetAdminCategories,
+    verifyToken,
+    getAdminCategories
+  )
   .get('/:id', validateGetCategory, verifyToken, getCategory)
-  .patch('/:id', validateUpdateCategory, verifyToken, updateCategory)
+  .patch(
+    '/:id',
+    checkFolder,
+    upload,
+    validateUpdateCategory,
+    verifyToken,
+    updateCategory
+  )
   .delete('/:id', validateDeleteCategory, verifyToken, deleteCategory);
 
 export default router;

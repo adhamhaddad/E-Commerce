@@ -6,7 +6,10 @@ const product = new Product();
 
 export const updateProduct = async (req: Request, res: Response) => {
   try {
-    const response = await product.updateProduct(req.params.id, req.body);
+    const response = await product.updateProduct(req.params.id, {
+      ...req.body,
+      image_url: req?.file?.path
+    });
     io.emit('products', { action: 'UPDATE', data: response });
     res.status(203).json({ data: response });
   } catch (error) {

@@ -3,13 +3,13 @@ import { useApi } from '@config';
 import Card from '@UI/card';
 import styles from '@styles/products.module.css';
 
-const Products = () => {
+const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const searchParams = new URLSearchParams(location.search);
   const name = searchParams.get('name');
   const category = searchParams.get('category');
   const id = searchParams.get('id');
-  const { get, loading } = useApi();
+  const { get, deleteFunc, loading } = useApi();
 
   const getProducts = async () => {
     await get(`/products/all/${id}`)
@@ -28,6 +28,15 @@ const Products = () => {
       .catch((err) => console.log(err));
   };
 
+  const handleDeleteProduct = async (product_id) => {
+    await deleteFunc(`/products/${product_id}`)
+      .then((res) =>
+        setProducts((prev) =>
+          prev.filter((product) => product.id !== res.data.id)
+        )
+      )
+      .catch((err) => console.log(err));
+  };
   const productList =
     products.length > 0 &&
     products.map((product) => (
@@ -37,6 +46,8 @@ const Products = () => {
         name={product.name}
         image_url={product.image_url}
         price={product.price}
+        quantity={product.quantity}
+        handleDeleteProduct={handleDeleteProduct}
       />
     ));
 
@@ -63,4 +74,4 @@ const Products = () => {
     </div>
   );
 };
-export default Products;
+export default ProductsPage;

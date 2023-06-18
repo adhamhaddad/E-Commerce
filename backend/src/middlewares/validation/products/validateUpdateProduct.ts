@@ -15,8 +15,8 @@ export const validateUpdateProduct = [
     .withMessage('name is empty')
     .isString()
     .withMessage('name must be a string')
-    .isLength({ min: 4, max: 50 })
-    .withMessage('name must be at least 4 and maximum 50 letters'),
+    .isLength({ min: 4, max: 100 })
+    .withMessage('name must be at least 4 and maximum 100 letters'),
   body('slug')
     .exists()
     .withMessage('slug is missing from the body')
@@ -24,8 +24,8 @@ export const validateUpdateProduct = [
     .withMessage('slug is empty')
     .isString()
     .withMessage('slug must be a string')
-    .isLength({ min: 3, max: 50 })
-    .withMessage('slug must be at least 3 and maximum 50 letters'),
+    .isLength({ min: 3, max: 100 })
+    .withMessage('slug must be at least 3 and maximum 100 letters'),
   body('product_desc')
     .exists()
     .withMessage('product_desc is missing from the body')
@@ -39,5 +39,15 @@ export const validateUpdateProduct = [
     }
     return true;
   }),
+  body('price')
+    .exists()
+    .withMessage('price is missing from the body')
+    .notEmpty()
+    .withMessage('price is empty'),
+  body('quantity')
+    .exists()
+    .withMessage('quantity is missing from the body')
+    .notEmpty()
+    .withMessage('quantity is empty'),
   (req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ];

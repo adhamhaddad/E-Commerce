@@ -4,8 +4,9 @@ import { EmailType } from './email';
 import Password, { PasswordType } from './password';
 
 export enum UserRole {
-  TENANT = 'TENANT',
-  CLIENT = 'CLIENT'
+  OWNER = 'STORE_OWNER',
+  ADMIN = 'SUPER_ADMIN',
+  CUSTOMER = 'CUSTOMER'
 }
 export type UserType = {
   id: string;

@@ -1,0 +1,42 @@
+.dashboard-page {
+    height: 100%;
+    display: flex;
+    overflow-y: auto;
+}
+
+.dashboard-page .side-bar {
+    height: 100%;
+    width: 250px;
+    box-shadow: 0px 5px 5px 2px #ddd;
+}
+
+.dashboard-page .side-bar ul li a {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #000;
+}
+
+.dashboard-page .side-bar ul li a svg {
+    width: 18px;
+    margin-right: 10px;
+}
+
+.dashboard-pages {
+    /* flex-grow: 1; */
+    width: 100%;
+    padding: 10px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.dashboard-page .side-bar ul li:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.dashboard-page .side-bar ul li a.active {
+    background-color: orange;
+    color: #FFF;
+}

@@ -1,0 +1,25 @@
+.username-section {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    background-color: #FFF;
+}
+
+.username-section div h3 {
+    font-size: 16px;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+}
+
+.username-section div h3 i {
+    margin-right: 10px;
+}
+
+.username-section>div {
+    width: 50%;
+    padding: 20px;
+}
+
+.left-side {
+    border-right: 1px solid #ddd;
+}

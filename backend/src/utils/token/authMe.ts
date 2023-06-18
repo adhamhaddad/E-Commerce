@@ -43,13 +43,13 @@ export const authMe = async (req: Request, res: Response) => {
       if (!cachedToken || cachedToken !== token) {
         throw new Error('Access token not found or expired');
       }
-      const { id, first_name, last_name, role } = decoded;
+      const { id, first_name, last_name, role, email } = decoded;
 
       req.user = { id };
 
       return res.status(200).json({
         data: {
-          user: { id, first_name, last_name, role },
+          user: { id, first_name, last_name, role, email },
           accessToken: token
         }
       });
@@ -57,11 +57,9 @@ export const authMe = async (req: Request, res: Response) => {
       if ((err as Error).name !== 'TokenExpiredError') {
         throw new Error('Invalid access token');
       }
-      console.log('Token is expired from authMe');
       // Get Refresh-Token
       const refreshToken = req.get('X-Refresh-Token') as string;
 
-      // Rest of your route code goes here
       if (!refreshToken) {
         throw new Error('Refresh token missing');
       }
@@ -72,12 +70,13 @@ export const authMe = async (req: Request, res: Response) => {
         );
       }
       const decoded = await verifyRefreshToken(token);
-      const { id, first_name, last_name, role } = decoded;
+      const { id, first_name, last_name, role, email } = decoded;
       const newAccessToken = await setAccessToken({
         id,
         first_name,
         last_name,
-        role
+        role,
+        email
       });
 
       // Attach user object to request and proceed with new access token
@@ -94,7 +93,8 @@ export const authMe = async (req: Request, res: Response) => {
             id,
             first_name,
             last_name,
-            role
+            role,
+            email
           },
           accessToken: newAccessToken
         }

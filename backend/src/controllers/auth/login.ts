@@ -33,8 +33,16 @@ export const authUser = async (req: Request, res: Response) => {
       message: 'User authenticated successfully.'
     });
   } catch (error) {
-    res.status(400).json({
-      error: (error as Error).message
-    });
+    if ((error as Error).message.includes('Password')) {
+      return res
+        .status(400)
+        .json({ errors: [{ password: (error as Error).message }] });
+    }
+    if ((error as Error).message.includes('Email')) {
+      return res
+        .status(400)
+        .json({ errors: [{ email: (error as Error).message }] });
+    }
+    res.status(400).json({ errors: (error as Error).message });
   }
 };

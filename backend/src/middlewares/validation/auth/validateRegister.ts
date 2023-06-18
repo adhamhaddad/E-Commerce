@@ -1,2 +1,2 @@
-import { validateCreateUser } from '../users/validateCreateUser';
+import { validateCreateUser } from '../users';
 export const validateRegister = validateCreateUser;

@@ -1,9 +1,46 @@
 .account-page {
-    padding: 10px;
+    display: flex;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .account-page button {
     border: 1px solid #888;
     border-radius: 4px;
     padding: 10px;
+}
+
+.side-bar {
+    width: 300px;
+    height: 100%;
+    text-align: center;
+    border-right: 0.5px solid #ddd;
+}
+
+.side-bar .avatar {
+    padding: 10px 0px;
+    background-blend-mode: multiply;
+}
+
+.side-bar .avatar img {
+    display: block;
+    margin: auto;
+    background-blend-mode: multiply;
+}
+.side-bar .user-name {
+    text-transform: capitalize;
+}
+
+.settings-section {
+    height: 100%;
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 10px;
+    background-color: #eee;
+}
+
+.settings-section>h3 {
+    padding: 20px;
+    background-color: #FFF;
+    border-bottom: 1px solid #ddd;
 }

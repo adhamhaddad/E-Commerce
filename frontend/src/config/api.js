@@ -62,6 +62,17 @@ function useApi() {
       throw error;
     }
   }
+  async function patch(url, data) {
+    setLoading(true);
+    try {
+      const response = await api.patch(url, data);
+      setLoading(false);
+      return response;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  }
   async function deleteFunc(url, data) {
     setLoading(true);
     try {
@@ -74,7 +85,7 @@ function useApi() {
     }
   }
 
-  return { get, post, deleteFunc, loading };
+  return { get, post, patch, deleteFunc, loading };
 }
 
 export default useApi;

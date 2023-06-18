@@ -122,24 +122,32 @@ const Address = () => {
   ];
 
   return (
-    <div className={styles['address']}>
-      <h2>Address</h2>
-      <form onSubmit={handleSubmit}>
-        {Inputs.map((input) => (
-          <Input {...input} />
-        ))}
-        <Button
-          type='submit'
-          text='Add Address'
-          style={{
-            display: 'block',
-            padding: '10px',
-            margin: '10px 0px',
-            border: '1px solid #888',
-            borderRadius: '4px'
-          }}
-        />
-      </form>
+    <div className={styles['address-section']}>
+      <div className={styles['left-side']}>
+        <h3>
+          <i className='fa-solid fa-location-dot'></i>
+          <span>Address</span>
+        </h3>
+        <span>Add or change your address from here</span>
+      </div>
+      <div>
+        <form onSubmit={handleSubmit}>
+          {Inputs.map((input) => (
+            <Input {...input} />
+          ))}
+          <Button
+            type='submit'
+            text='Add Address'
+            style={{
+              display: 'block',
+              padding: '10px',
+              margin: '10px 0px',
+              border: '1px solid #888',
+              borderRadius: '4px'
+            }}
+          />
+        </form>
+      </div>
     </div>
   );
 };

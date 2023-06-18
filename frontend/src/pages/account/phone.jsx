@@ -8,6 +8,7 @@ import styles from '@styles/phone.module.css';
 const Phone = () => {
   const [phones, setPhones] = useState([]);
   const [values, setValues] = useState({ phone: '' });
+  const [error, setError] = useState({ phone: null });
   const { user } = useAuth();
   const { get, post, loading } = useApi();
 
@@ -17,14 +18,19 @@ const Phone = () => {
       .catch((err) => console.log(err));
   };
   const addPhone = async () => {
-    await post('/phones', { ...values, user_id: user.id })
-      .then((res) => {
-        setValues({ phone: '' });
-        setPhones((prev) => [...prev, res.data]);
-      })
-      .catch((err) => console.log(err));
+    try {
+      const response = await post('/phones', { ...values, user_id: user.id });
+      setValues({ phone: '' });
+      setPhones((prev) => [...prev, response.data]);
+    } catch (error) {
+      const errors = error.response.data.errors;
+      setError(errors[0]);
+    }
   };
   const handleChange = (prop) => (event) => {
+    if (error.phone) {
+      setError({ phone: null });
+    }
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
   const handleChangePhone = (prop) => (event) => {
@@ -42,6 +48,7 @@ const Phone = () => {
     return () => {
       setPhones([]);
       setValues({ email: '' });
+      setError({ phone: null });
     };
   }, []);
 
@@ -58,29 +65,38 @@ const Phone = () => {
       id: 'new_phone',
       label: 'New Phone',
       value: values.phone,
+      error: error.phone,
       onChange: handleChange('phone')
     }
   ];
 
   return (
-    <div className={styles['phone']}>
-      <h2>Phone</h2>
-      <form onSubmit={handleSubmit}>
-        {Inputs.map((input) => (
-          <Input {...input} />
-        ))}
-        <Button
-          type='submit'
-          text='Add Phone'
-          style={{
-            display: 'block',
-            padding: '10px',
-            margin: '10px 0px',
-            border: '1px solid #888',
-            borderRadius: '4px'
-          }}
-        />
-      </form>
+    <div className={styles['phone-section']}>
+      <div className={styles['left-side']}>
+        <h3>
+          <i className='fa-solid fa-phone'></i>
+          <span>Phone Number</span>
+        </h3>
+        <span>Add or change your phone number from here</span>
+      </div>
+      <div>
+        <form onSubmit={handleSubmit}>
+          {Inputs.map((input) => (
+            <Input {...input} />
+          ))}
+          <Button
+            type='submit'
+            text='Add Phone'
+            style={{
+              display: 'block',
+              padding: '10px',
+              margin: '10px 0px',
+              border: '1px solid #888',
+              borderRadius: '4px'
+            }}
+          />
+        </form>
+      </div>
     </div>
   );
 };

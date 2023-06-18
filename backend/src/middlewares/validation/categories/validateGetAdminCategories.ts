@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { check } from 'express-validator';
 import { validate } from '../validationResult';
 
-export const validateGetCategories = [
+export const validateGetAdminCategories = [
   check('user_id')
     .exists()
     .withMessage('user_id is missing from the parameters')

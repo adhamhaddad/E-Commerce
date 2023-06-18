@@ -12,6 +12,10 @@
 * {
   margin: 0;
   padding: 0;
+  border: none;
+  outline: none;
+  list-style-type: none;
+  text-decoration: none;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -o-box-sizing: border-box;

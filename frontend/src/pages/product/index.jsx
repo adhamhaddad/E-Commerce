@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useApi, API_URL } from '@config';
+import Button from '@UI/button';
 import styles from '@styles/product.module.css';
 
-const Product = () => {
+const ProductPage = () => {
   const [product, setProduct] = useState({});
   const { get, loading } = useApi();
-  const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get('id');
+  const { id } = useParams();
   const getProduct = async () => {
     await get(`/products/${id}`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.log(err));
   };
 
-  console.log(product);
   useEffect(() => {
     getProduct();
     return () => {
@@ -25,31 +25,26 @@ const Product = () => {
     <div className={styles['product-page']}>
       {loading && <p>Loading..</p>}
       {!loading && (
-        <div className={styles['product-view']}>
-          <div>
-            <div className={styles['product-image']}>
-              <img
-                src={`${API_URL}/${product.image_url}`}
-                crossOrigin='anonymous'
-                alt='product-image'
-              />
-            </div>
-            <span className={styles['product-name']}>{product.name}</span>
-            <span className={styles['product-price']}>
-              price: {product.price} EGP
-            </span>
+        <div className={styles['product-info']}>
+          <div className={styles['product-image']}>
+            <img
+              src={`${API_URL}/${product.image_url}`}
+              crossOrigin='anonymous'
+              alt='product-image'
+            />
           </div>
-          <div>
-            <p className={styles['description']}>
-              <strong>Description:</strong> {product.product_desc}
-            </p>
-            <span className={styles['quantity']}>
-              <strong>Quantity:</strong> {product.quantity}
+          <div className={styles['product-details']}>
+            <span className={styles['product-name']}>{product.name}</span>
+            <span className={styles['product-price']}>EGP {product.price}</span>
+            <span className={styles['product-quantity']}>
+              {product.quantity} items left
             </span>
+            <p className={styles['description']}>{product.product_desc}</p>
+            <Button text='ADD TO CART' />
           </div>
         </div>
       )}
     </div>
   );
 };
-export default Product;
+export default ProductPage;

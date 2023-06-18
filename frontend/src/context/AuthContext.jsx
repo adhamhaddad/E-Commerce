@@ -41,9 +41,10 @@ const AuthProvider = ({ children }) => {
             setAccessToken(AccessToken);
           })
           .catch(() => {
-            localStorage.removeItem('user');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('accessToken');
+            window.localStorage.removeItem('user');
+            window.localStorage.removeItem('refreshToken');
+            window.localStorage.removeItem('accessToken');
+            window.localStorage.removeItem('cartItems');
             setUser(null);
             setAccessToken(null);
             setRefreshToken(null);
@@ -103,6 +104,8 @@ const AuthProvider = ({ children }) => {
 
     // Remove user data from localStorage
     window.localStorage.removeItem('user');
+    // Remove cartItems from localStorage
+    window.localStorage.removeItem('cartItems');
     // Remove accessToken from localStorage
     window.localStorage.removeItem('accessToken');
     // Remove refreshToken from cookies

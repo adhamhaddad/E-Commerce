@@ -6,26 +6,36 @@ const Item = ({
   id,
   image_url,
   name,
-  quantity,
+  productQuantity,
   price,
   handleQuantity,
   handleRemoveItem
 }) => {
   return (
     <li className={styles['cart-item']}>
-      <img src={`${API_URL}/${image_url}`} crossOrigin='anonymous' alt={name} />
       <div className={styles['item-details']}>
-        <h2>{name}</h2>
-        <p>Price: {price} EGP</p>
-        <div className={styles['quantity-container']}>
+        <div className={styles['item-image']}>
+          <img
+            src={`${API_URL}/${image_url}`}
+            crossOrigin='anonymous'
+            alt={name}
+          />
+        </div>
+        <div className={styles['item-info']}>
+          <h2>{name}</h2>
+          <span>Price: {price} EGP</span>
+        </div>
+      </div>
+      <div className={styles['item-control']}>
+        <div className={styles['quantity-control']}>
           <button
             className={styles['quantity-button']}
             onClick={() => handleQuantity('decrement', id)}
-            disabled={quantity === 1}
+            disabled={productQuantity === 1}
           >
             -
           </button>
-          <span className={styles['quantity']}>{quantity}</span>
+          <span className={styles['quantity']}>{productQuantity}</span>
           <button
             className={styles['quantity-button']}
             onClick={() => handleQuantity('increment', id)}
@@ -33,12 +43,14 @@ const Item = ({
             +
           </button>
         </div>
-        <button
-          className={styles['remove-button']}
-          onClick={() => handleRemoveItem(id)}
-        >
-          Remove
-        </button>
+        <div className={styles['cart-actions']}>
+          <button
+            className={styles['remove-button']}
+            onClick={() => handleRemoveItem(id)}
+          >
+            Remove
+          </button>
+        </div>
       </div>
     </li>
   );

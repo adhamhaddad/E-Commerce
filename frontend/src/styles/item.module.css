@@ -1,39 +1,62 @@
-
 .cart-item {
-    width: 300px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    padding: 10px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 10px 0px;
+    padding: 10px;
 }
 
-.cart-item img {
+.item-details {
+    display: flex;
+    width: 500px;
+}
+
+.item-details .item-image {
     width: 100px;
     height: 100px;
-    object-fit: contain;
     margin-right: 20px;
 }
 
-.item-details h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+.item-details .item-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
 }
 
-.item-details p {
+.item-details .item-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-details .item-info h2 {
     font-size: 18px;
-    margin: 0 0 10px 0;
+    font-weight: normal;
+    /* white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis */
 }
 
-.quantity-container {
+.item-details .item-info span {
+    font-size: 16px;
+}
+
+.item-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.item-control .quantity-control {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin-bottom: 10px;
 }
 
-.quantity-button {
+.item-control .quantity-control .quantity-button {
     background-color: #f8f8f8;
     color: #333;
     border: 1px solid #bbb;
@@ -44,21 +67,19 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.quantity-button:hover {
+.item-control .quantity-control .quantity-button:hover {
     background-color: #f1f1f1;
 }
 
-.quantity {
-    font-size: 20px;
-    font-weight: bold;
+.item-control .quantity-control .quantity {
+    font-size: 16px;
     margin: 0 10px;
 }
 
 .remove-button {
     background-color: #f44336;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
+    color: #FFF;
+    padding: 5px 20px;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;

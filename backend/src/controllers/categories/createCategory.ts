@@ -11,11 +11,7 @@ export const createCategory = async (req: Request, res: Response) => {
       icon_url: req?.file?.path
     });
     io.emit('categories', { action: 'CREATE', data: response });
-    res.status(201).json({
-      status: true,
-      data: response,
-      message: 'Category created successfully.'
-    });
+    res.status(201).json({ data: response });
   } catch (error) {
     res.status(400).json({
       status: false,

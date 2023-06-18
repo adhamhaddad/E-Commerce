@@ -6,7 +6,7 @@ import styles from '@styles/logo.module.css';
 const Logo = () => {
   return (
     <div className={styles['logo']}>
-      <Link to='/products'>
+      <Link exact='true' to='/products'>
         <img src={logo} alt='Logo' />
       </Link>
     </div>

@@ -1,0 +1,26 @@
+.address-section {
+    background-color: #FFF;
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+
+.address-section div h3 {
+    font-size: 16px;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+}
+
+
+.address-section div h3 i {
+    margin-right: 10px;
+}
+
+.address-section>div {
+    width: 50%;
+    padding: 20px;
+}
+
+.left-side {
+    border-right: 1px solid #ddd;
+}

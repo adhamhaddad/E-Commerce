@@ -13,11 +13,22 @@
 
 .navbar li a {
     display: flex;
-    font-weight: bold;
     color: #222;
     height: 100%;
     padding: 0px 10px;
     align-items: center;
+    position: relative;
+    transition: .4s color ease-in-out;
+}
+
+.navbar li a:hover {
+    color: orange;
+    transition: .4s color ease-in-out;
+}
+
+.navbar li a.active {
+    color: orange;
+    border-bottom: 2px solid orange;
 }
 
 .navbar li a i {
@@ -32,4 +43,21 @@
     transform: translateX(-50%);
     width: 150px;
     padding: 10px;
+}
+
+
+
+.cart-list {
+    background-color: orange;
+    color: #FFF;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    position: absolute;
+    top: -9px;
+    left: 10px;
 }

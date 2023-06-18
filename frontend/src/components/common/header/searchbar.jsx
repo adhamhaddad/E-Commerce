@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from '@UI/button';
-import classes from '@styles/searchbar.module.css';
+import styles from '@styles/searchbar.module.css';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
@@ -15,20 +15,17 @@ const SearchBar = () => {
   };
 
   return (
-    <form className={classes['search-bar']} onSubmit={handleSubmit}>
-      <input
-        type='search'
-        placeholder='Search products, brands and categories'
-        value={query}
-        onChange={onQueryChange}
-      />
-      <Button
-        text='SEARCH'
-        type='submit'
-        style={{
-          
-        }}
-      />
+    <form className={styles['search-bar']} onSubmit={handleSubmit}>
+      <div className={styles['search-bar_input']}>
+        <i className='fa-solid fa-magnifying-glass'></i>
+        <input
+          type='search'
+          placeholder='Search products, brands and categories'
+          value={query}
+          onChange={onQueryChange}
+        />
+      </div>
+      <Button text='SEARCH' type='submit' />
     </form>
   );
 };

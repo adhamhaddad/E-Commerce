@@ -1,18 +1,54 @@
 .login-page,
 .register-page {
-    transform: translateY(50%);
+    height: 100%;
+}
+
+.register-page h2,
+.login-page h2 {
+    font-weight: normal;
+    padding: 5px 0px;
+    margin-top: 20px;
 }
 
 .register-page p,
-.register-page h2,
-.login-page p,
-.login-page h2 {
+.login-page p {
     text-align: center;
 }
 
-.form {
-    width: 300px;
+.form-view {
+    position: relative;
+    width: 350px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid orange;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #FFF;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
     margin: auto;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.avatar img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid orange;
+}
+
+.form {
+    margin: 40px auto;
 }
 
 .form input {
@@ -43,14 +79,10 @@
     transition: background .5s ease-in-out;
 }
 
-@media screen and (max-width: 480px) {
+@media only screen and (max-width: 768px) {}
 
-    .register-page h2,
-    .login-page h2 {
-        margin-top: 10px;
-    }
-    .form {
+@media screen and (max-width: 480px) {
+    .form-view {
         width: 100%;
-        margin: none;
     }
 }

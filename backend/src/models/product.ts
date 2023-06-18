@@ -133,14 +133,27 @@ class Product {
       return result.rows;
     });
   }
-  async updateProduct(id: string, p: ProductType): Promise<ProductType> {
+  async updateProduct(id: string, p: ProductTypes): Promise<ProductType> {
     return this.withConnection(async (connection: PoolClient) => {
-      const query = {
-        text: 'UPDATE products SET name=$2, slug=$3, product_desc=$4 WHERE id=$1 RETURNING *',
-        values: [id, p.name, p.slug, p.product_desc]
-      };
-      const result = await connection.query(query);
-      return result.rows[0];
+      return this.withTransaction(connection, async () => {
+        const query = {
+          text: 'UPDATE products SET name=$2, slug=$3, product_desc=$4, price=$5, quantity=$6 WHERE id=$1 RETURNING *',
+          values: [id, p.name, p.slug, p.product_desc, p.price, p.quantity]
+        };
+        const result = await connection.query(query);
+        const { id: product_id } = result.rows[0];
+        const deleteImageQuery = {
+          text: 'DELETE FROM product_images WHERE product_id=$1',
+          values: [id]
+        };
+        await connection.query(deleteImageQuery);
+        const imageQuery = {
+          text: 'INSERT INTO product_images (image_url, product_id) VALUES ($1, $2) RETURNING image_url',
+          values: [p.image_url, product_id]
+        };
+        const imageResult = await connection.query(imageQuery);
+        return { ...result.rows[0], ...imageResult.rows[0] };
+      });
     });
   }
   async deleteProduct(id: string): Promise<ProductType & ProductImage> {

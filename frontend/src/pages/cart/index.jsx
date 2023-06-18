@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useApi, API_URL } from '@config';
+import { useApi } from '@config';
 import { useAuth } from '@hooks';
-import Button from '@UI/button';
 import Item from './item';
 import styles from '@styles/cart.module.css';
 
-const Cart = () => {
+const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
-  const { get, post, loading } = useApi();
+  const { post, loading } = useApi();
   const { user } = useAuth();
-
   const handleQuantity = (type, id) => {
     if (type === 'decrement') {
       setCartItems((prev) =>
         prev.filter((item) =>
           item.id === id
-            ? { ...item, quantity: item.quantity > 1 ? item.quantity-- : 1 }
+            ? { ...item, productQuantity: item.productQuantity > 1 ? item.productQuantity-- : 1 }
             : item
         )
       );
     } else {
       setCartItems((prev) =>
         prev.filter((item) =>
-          item.id === id ? { ...item, quantity: item.quantity++ } : item
+          item.id === id ? { ...item, productQuantity: item.productQuantity++ } : item
         )
       );
     }
@@ -39,7 +37,7 @@ const Cart = () => {
       user_id: user.id,
       items: cartItems.map((item) => ({
         product_id: item.id,
-        quantity: String(item.quantity)
+        quantity: String(item.productQuantity)
       }))
     })
       .then((res) => {
@@ -51,7 +49,6 @@ const Cart = () => {
   const handleSubmit = (event) => {
     addOrder();
   };
-
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
     setCartItems(storedCartItems);
@@ -68,13 +65,15 @@ const Cart = () => {
       />
     ));
   const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + item.price * item.productQuantity,
     0
   );
 
   return (
     <div className={styles['cart-list']}>
-      <h1>Your Cart</h1>
+      <div className={styles['top-bar']}>
+        <h3>Your Cart</h3>
+      </div>
       <ul className={styles['cart-items']}>{itemList}</ul>
       <p className={styles['total-price']}>Total: {totalPrice} EGP</p>
       <button className={styles['checkout-button']} onClick={handleSubmit}>
@@ -84,4 +83,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default CartPage;

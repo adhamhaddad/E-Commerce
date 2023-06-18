@@ -1,5 +1,6 @@
 import auth from './auth';
 import user from './user';
+import admin from './admin';
 import email from './emails';
 import userAddress from './userAddress';
 import phone from './phone';
@@ -15,6 +16,7 @@ import orders from './orders';
 export {
   auth,
   user,
+  admin,
   email,
   phone,
   userAddress,

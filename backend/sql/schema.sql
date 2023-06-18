@@ -9,14 +9,14 @@ CREATE DATABASE ecommerce;
 -- -------------------------
 -- Role admin
 -- -------------------------
-DROP ROLE IF EXISTS admin;
+-- DROP ROLE IF EXISTS admin;
 --
 --
-CREATE ROLE admin WITH PASSWORD 'admin';
+-- CREATE ROLE admin WITH PASSWORD 'admin';
 -- -------------------------
-Alter Role admin
+-- ALTER ROLE admin
 -- -------------------------
-ALTER ROLE admin WITH SUPERUSER CREATEROLE CREATEDB LOGIN;
+-- ALTER ROLE admin WITH SUPERUSER CREATEROLE CREATEDB LOGIN;
 -- -------------------------
 -- Database GRANT PRIVILEGES
 -- -------------------------
@@ -25,12 +25,20 @@ GRANT ALL PRIVILEGES ON DATABASE ecommerce TO admin;
 -- Connect to delivery_service database
 -- -------------------------
 \c ecommerce;
+-- -------------------------
+-- Extension uuid
+-- -------------------------
+DROP EXTENSION IF EXISTS uuid;
+--
+--
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- -------------------------
 -- Type user_role
 -- -------------------------
 DROP TYPE IF EXISTS user_role;
 --
 --
-CREATE TYPE user_role AS ENUM('TENANT', 'CLIENT');
+CREATE TYPE user_role AS ENUM('STORE_OWNER', 'SUPER_ADMIN', 'CUSTOMER');
 -- -------------------------
 -- Table users
 -- -------------------------
@@ -41,7 +49,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(100),
     last_name VARCHAR(100),
-    role user_role DEFAULT 'CLIENT',
+    role user_role DEFAULT 'CUSTOMER',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
@@ -247,6 +255,7 @@ CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     order_status VARCHAR(100) DEFAULT 'PENDING',
+    tracking_number uuid DEFAULT uuid_generate_v4(),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP

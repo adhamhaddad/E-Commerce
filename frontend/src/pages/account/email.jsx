@@ -8,6 +8,7 @@ import styles from '@styles/email.module.css';
 const Email = () => {
   const [emails, setEmails] = useState([]);
   const [values, setValues] = useState({ email: '' });
+  const [error, setError] = useState({ email: null });
   const { user } = useAuth();
   const { get, post, loading } = useApi();
 
@@ -17,14 +18,19 @@ const Email = () => {
       .catch((err) => console.log(err));
   };
   const addEmail = async () => {
-    await post('/emails', { ...values, user_id: user.id })
-      .then((res) => {
-        setValues({ email: '' });
-        setEmails((prev) => [...prev, res.data]);
-      })
-      .catch((err) => console.log(err));
+    try {
+      const response = await post('/emails', { ...values, user_id: user.id });
+      setValues({ email: '' });
+      setEmails((prev) => [...prev, response.data]);
+    } catch (error) {
+      const errors = error.response.data.errors;
+      setError(errors[0]);
+    }
   };
   const handleChange = (prop) => (event) => {
+    if (error.email) {
+      setError({ email: null });
+    }
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
 
@@ -59,29 +65,38 @@ const Email = () => {
       id: 'new_email',
       label: 'New Email',
       value: values.email,
+      error: error.email,
       onChange: handleChange('email')
     }
   ];
 
   return (
-    <div className={styles['email']}>
-      <h2>Email</h2>
-      <form onSubmit={handleSubmit}>
-        {Inputs.map((input) => (
-          <Input {...input} />
-        ))}
-        <Button
-          type='submit'
-          text='Add Email'
-          style={{
-            display: 'block',
-            padding: '10px',
-            margin: '10px 0px',
-            border: '1px solid #888',
-            borderRadius: '4px'
-          }}
-        />
-      </form>
+    <div className={styles['email-section']}>
+      <div className={styles['left-side']}>
+        <h3>
+          <i className='fa-solid fa-envelope'></i>
+          <span>Email Address</span>
+        </h3>
+        <span>Add or change your email from here</span>
+      </div>
+      <div>
+        <form onSubmit={handleSubmit}>
+          {Inputs.map((input) => (
+            <Input {...input} />
+          ))}
+          <Button
+            type='submit'
+            text='Add Email'
+            style={{
+              display: 'block',
+              padding: '10px',
+              margin: '10px 0px',
+              border: '1px solid #888',
+              borderRadius: '4px'
+            }}
+          />
+        </form>
+      </div>
     </div>
   );
 };

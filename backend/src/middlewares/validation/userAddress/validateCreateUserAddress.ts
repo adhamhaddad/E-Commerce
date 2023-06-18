@@ -23,10 +23,7 @@ export const validateCreateUserAddress = [
     .withMessage('address1 must be a string'),
   body('address2')
     .exists()
-    .withMessage('address2 is missing from the body')
-    .notEmpty()
-    .isString()
-    .withMessage('address2 must be a string'),
+    .withMessage('address2 is missing from the body'),
   body('user_id')
     .exists()
     .withMessage('user_id is missing from the body')

@@ -48,27 +48,35 @@ const UserName = () => {
   }, []);
 
   return (
-    <div className={styles['username']}>
-      <h2>User Name</h2>
-      <form onSubmit={handleSubmit}>
-        {Inputs.map((input) => (
-          <Input
-            {...input}
-            style={{ display: 'inline-block', margin: '0px 10px 10px 0px' }}
+    <div className={styles['username-section']}>
+      <div className={styles['left-side']}>
+        <h3>
+          <i className='fa-solid fa-user'></i>
+          <span>User Name</span>
+        </h3>
+        <span>Change your name form here</span>
+      </div>
+      <div>
+        <form onSubmit={handleSubmit}>
+          {Inputs.map((input) => (
+            <Input
+              {...input}
+              style={{ display: 'inline-block', margin: '0px 10px 10px 0px' }}
+            />
+          ))}
+          <Button
+            type='submit'
+            text='Save Changes'
+            style={{
+              display: 'block',
+              padding: '10px',
+              border: '1px solid #888',
+              borderRadius: '4px'
+            }}
+            onClick={handleSubmit}
           />
-        ))}
-        <Button
-          type='submit'
-          text='Save Changes'
-          style={{
-            display: 'block',
-            padding: '10px',
-            border: '1px solid #888',
-            borderRadius: '4px'
-          }}
-          onClick={handleSubmit}
-        />
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

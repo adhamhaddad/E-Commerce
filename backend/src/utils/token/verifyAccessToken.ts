@@ -57,7 +57,6 @@ export const verifyAccessToken = async (
       // Get Refresh-Token
       const refreshToken = req.get('X-Refresh-Token') as string;
 
-      // Rest of your route code goes here
       if (!refreshToken) {
         throw new Error('Refresh token missing');
       }
@@ -68,12 +67,13 @@ export const verifyAccessToken = async (
         );
       }
       const decoded = await verifyRefreshToken(token);
-      const { id, first_name, last_name, role } = decoded;
+      const { id, first_name, last_name, role, email } = decoded;
       const newAccessToken = await setAccessToken({
         id,
         first_name,
         last_name,
-        role
+        role,
+        email
       });
 
       // Attach user object to request and proceed with new access token

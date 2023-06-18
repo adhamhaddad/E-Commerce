@@ -35,7 +35,14 @@ router
   .get('/all/:category_id', validateGetProducts, verifyToken, getProducts)
   .get('/search', validateGetProductBySearch, verifyToken, getProductBySearch)
   .get('/:id', validateGetProduct, verifyToken, getProduct)
-  .patch('/:id', validateUpdateProduct, verifyToken, updateProduct)
+  .patch(
+    '/:id',
+    checkFolder,
+    products,
+    validateUpdateProduct,
+    verifyToken,
+    updateProduct
+  )
   .delete('/:id', validateDeleteProduct, verifyToken, deleteProduct);
 
 export default router;

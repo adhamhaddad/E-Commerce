@@ -1,0 +1,29 @@
+.phone-section {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    background-color: #FFF;
+}
+
+.phone-section div h3 {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.phone-section div h3 {
+    display: flex;
+    align-items: center;
+}
+
+.phone-section div h3 i {
+    margin-right: 10px;
+}
+
+.phone-section>div {
+    width: 50%;
+    padding: 20px;
+}
+
+.left-side {
+    border-right: 1px solid #ddd;
+}
