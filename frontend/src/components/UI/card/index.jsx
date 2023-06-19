@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { API_URL } from '@config';
-import { useAuth } from '@hooks';
+import { useAuth, useCart } from '@hooks';
 import Button from '@UI/button';
+import Modal from '@common/modal';
 import styles from '@styles/card.module.css';
 
 const Card = ({
@@ -14,9 +15,14 @@ const Card = ({
   handleDeleteProduct
 }) => {
   const [productQuantity, setProductQuantity] = useState(1);
+  const [modalStatus, setModalStatus] = useState(false);
   const history = useHistory();
   const { user } = useAuth();
+  const { cartItems, updateCartItems } = useCart();
 
+  const handleModalState = () => {
+    setModalStatus((prev) => !prev);
+  };
   const handleCounter = (type) => {
     if (type === 'decrement') {
       setProductQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -33,20 +39,26 @@ const Card = ({
   };
 
   const handleAddToCart = () => {
-    const existingCartItems =
-      JSON.parse(localStorage.getItem('cartItems')) || [];
-    const existingCartItem = existingCartItems.find((item) => item.id === id);
+    const existingCartItem = cartItems.find((item) => item.id === id);
 
     if (existingCartItem) {
       // If the product already exists in the cart, update its quantity
       existingCartItem.productQuantity += Number(productQuantity);
     } else {
       // If the product doesn't exist in the cart, add a new cart item
-      const newCartItem = { id, name, image_url, price, productQuantity };
-      existingCartItems.push(newCartItem);
+      const newCartItem = {
+        id,
+        name: name,
+        image_url: image_url,
+        price: price,
+        productQuantity: 1
+      };
+      cartItems.push(newCartItem);
     }
-    localStorage.setItem('cartItems', JSON.stringify(existingCartItems));
+    updateCartItems([...cartItems]);
+    setProductQuantity(1);
   };
+
   return (
     <div
       className={`${styles['card']} ${
@@ -65,7 +77,7 @@ const Card = ({
       <span className={styles['price']}>EGP {price}</span>
       <span className={styles['quantity']}>{quantity} items left</span>
       {(user.role === 'SUPER_ADMIN' || user.role === 'STORE_OWNER') && (
-        <Button text='DELETE' onClick={() => handleDeleteProduct(id)} />
+        <Button text='DELETE' onClick={handleModalState} />
       )}
       {user.role === 'CUSTOMER' && (
         <>
@@ -93,6 +105,34 @@ const Card = ({
           )}
         </>
       )}
+      {(user.role === 'SUPER_ADMIN' || user.role === 'STORE_OWNER') &&
+        modalStatus && (
+          <Modal
+            onClick={handleModalState}
+            children={
+              <div className={styles['delete-product-modal']}>
+                <h3 className={styles['modal-title']}>Delete</h3>
+                <p className={styles['modal-message']}>
+                  Are you sure, you want to delete?
+                </p>
+                <div className={styles['modal-actions']}>
+                  <button
+                    className={styles['cancel-button']}
+                    onClick={handleModalState}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className={styles['delete-button']}
+                    onClick={() => handleDeleteProduct(id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            }
+          />
+        )}
     </div>
   );
 };

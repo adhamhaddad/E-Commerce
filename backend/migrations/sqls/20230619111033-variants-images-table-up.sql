@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS variants_images (
+    id SERIAL PRIMARY KEY,
+    image_url TEXT NOT NULL,
+    variant_id INT NOT NULL REFERENCES variants(id) ON UPDATE CASCADE ON DELETE CASCADE
+);

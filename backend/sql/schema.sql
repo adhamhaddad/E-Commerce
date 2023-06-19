@@ -7,31 +7,32 @@ DROP DATABASE IF EXISTS ecommerce;
 --
 CREATE DATABASE ecommerce;
 -- -------------------------
+-- Database ecommerce_test
+-- -------------------------
+DROP DATABASE IF EXISTS ecommerce_test;
+--
+--
+CREATE DATABASE ecommerce_test;
+-- -------------------------
 -- Role admin
 -- -------------------------
--- DROP ROLE IF EXISTS admin;
+DROP ROLE IF EXISTS admin;
 --
 --
--- CREATE ROLE admin WITH PASSWORD 'admin';
+CREATE ROLE admin WITH PASSWORD 'admin';
 -- -------------------------
 -- ALTER ROLE admin
 -- -------------------------
--- ALTER ROLE admin WITH SUPERUSER CREATEROLE CREATEDB LOGIN;
+ALTER ROLE admin WITH SUPERUSER CREATEROLE CREATEDB LOGIN;
 -- -------------------------
 -- Database GRANT PRIVILEGES
 -- -------------------------
 GRANT ALL PRIVILEGES ON DATABASE ecommerce TO admin;
+GRANT ALL PRIVILEGES ON DATABASE ecommerce_test TO admin;
 -- -------------------------
 -- Connect to delivery_service database
 -- -------------------------
 \c ecommerce;
--- -------------------------
--- Extension uuid
--- -------------------------
-DROP EXTENSION IF EXISTS uuid;
---
---
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- -------------------------
 -- Type user_role
 -- -------------------------
@@ -104,6 +105,17 @@ CREATE TABLE IF NOT EXISTS user_addresses (
     postal_code INT NOT NULL,
     address1 VARCHAR(255) NOT NULL,
     address2 VARCHAR(255),
+    user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+-- -------------------------
+-- Table profile_pictures
+-- -------------------------
+DROP TABLE IF EXISTS profile_pictures;
+--
+--
+CREATE TABLE IF NOT EXISTS profile_pictures (
+    id SERIAL PRIMARY KEY,
+    img_url VARCHAR(100) NOT NULL,
     user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 -- -------------------------
@@ -255,7 +267,7 @@ CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     order_status VARCHAR(100) DEFAULT 'PENDING',
-    tracking_number uuid DEFAULT uuid_generate_v4(),
+    tracking_number VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP,
     deleted_at TIMESTAMP
@@ -281,5 +293,7 @@ CREATE TABLE IF NOT EXISTS shipments (
     id SERIAL PRIMARY KEY,
     order_id INT NOT NULL REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
     shipment_date DATE NOT NULL,
+    shipment_fee INT NOT NULL DEFAULT 60,
+    shipment_address TEXT NOT NULL,
     updated_at TIMESTAMP
 );

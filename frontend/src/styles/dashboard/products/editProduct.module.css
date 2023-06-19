@@ -83,3 +83,12 @@
     cursor: pointer;
     transition: background .5s ease-in-out;
 }
+
+
+.edit-product form textarea {
+    width: 100%;
+    padding: 10px;
+    resize: none;
+    display: block;
+    border: 1px solid #888
+}

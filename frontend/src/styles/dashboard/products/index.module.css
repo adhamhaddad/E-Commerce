@@ -39,6 +39,10 @@
     height: 40px;
 }
 
+.actions {
+    min-width: 90px;
+}
+
 .actions button {
     width: 30px;
     height: 30px;

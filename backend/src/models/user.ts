@@ -9,7 +9,7 @@ export enum UserRole {
   CUSTOMER = 'CUSTOMER'
 }
 export type UserType = {
-  id: string;
+  id?: number;
   first_name: string;
   last_name: string;
   role: UserRole;
@@ -52,7 +52,7 @@ class User {
         const password = new Password();
 
         const query = {
-          text: 'INSERT INTO users (first_name, last_name) VALUES ($1, $2) RETURNING *',
+          text: 'INSERT INTO users (first_name, last_name) VALUES ($1, $2) RETURNING id, first_name, last_name, role',
           values: [u.first_name, u.last_name]
         };
         const result = await connection.query(query);
@@ -73,7 +73,7 @@ class User {
   }
   async getUser(id: string): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
-      const query = { text: 'SELECT * FROM users WHERE id=$1', values: [id] };
+      const query = { text: 'SELECT id, first_name, last_name, role FROM users WHERE id=$1', values: [id] };
       const result = await connection.query(query);
       return result.rows[0];
     });
@@ -81,7 +81,7 @@ class User {
   async updateUser(id: string, u: UserType): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'UPDATE users SET first_name=$2, last_name=$3, updated_at=CURRENT_TIMESTAMP WHERE id=$1 RETURNING *',
+        text: 'UPDATE users SET first_name=$2, last_name=$3, updated_at=CURRENT_TIMESTAMP WHERE id=$1 RETURNING id, first_name, last_name',
         values: [id, u.first_name, u.last_name]
       };
       const result = await connection.query(query);

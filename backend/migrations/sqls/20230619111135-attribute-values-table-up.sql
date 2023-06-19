@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS attribute_values (
+    id SERIAL PRIMARY KEY,
+    value TEXT NOT NULL,
+    attribute_id INT NOT NULL REFERENCES attribute_names(id) ON UPDATE CASCADE ON DELETE CASCADE
+);

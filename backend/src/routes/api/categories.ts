@@ -15,8 +15,8 @@ import {
   deleteCategory
 } from '../../controllers/categories';
 import { verifyToken } from '../../middlewares/verifyToken';
-import { upload } from '../../utils/upload';
 import { checkFolder } from '../../utils/checkUpload';
+import { icons } from '../../utils/upload';
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router
   .post(
     '/',
     checkFolder,
-    upload,
+    icons,
     validateCreateCategory,
     verifyToken,
     createCategory
@@ -40,7 +40,7 @@ router
   .patch(
     '/:id',
     checkFolder,
-    upload,
+    icons,
     validateUpdateCategory,
     verifyToken,
     updateCategory

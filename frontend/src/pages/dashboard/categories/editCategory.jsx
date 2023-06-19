@@ -28,7 +28,7 @@ const EditCategoryPage = () => {
     try {
       const response = await get(`categories/${id}`);
       console.log(response);
-      // setValues(response.data);
+      setValues(response.data);
     } catch (error) {
       console.log(error);
     }

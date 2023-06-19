@@ -8,12 +8,13 @@ const SearchBar = () => {
   const history = useHistory();
 
   const onQueryChange = (e) => setQuery(e.target.value);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const trimmedQuery = query.trim();
-    trimmedQuery.length > 0 && history.push(`/products/search?name=${query}`);
+    trimmedQuery.length > 0 &&
+      history.push(`/products?search=true&name=${query}`);
   };
-
   return (
     <form className={styles['search-bar']} onSubmit={handleSubmit}>
       <div className={styles['search-bar_input']}>

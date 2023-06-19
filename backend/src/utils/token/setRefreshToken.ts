@@ -22,11 +22,11 @@ export const setRefreshToken = async (payload: Payload): Promise<string> => {
       algorithm: 'RS256',
       expiresIn: configs.refresh_expires,
       issuer: 'E-Commerce',
-      audience: `user_id-${payload.id}`,
+      audience: `user_id-${String(payload.id)}`,
       subject: 'refresh_token'
     };
     const token = jwt.sign(payload, privateKey, options);
-    await redisClient.set(`refresh_token:${payload.id}`, token, {
+    await redisClient.set(`refresh_token:${String(payload.id)}`, token, {
       EX: configs.refresh_expires
     });
     return token;

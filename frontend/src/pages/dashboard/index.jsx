@@ -10,6 +10,7 @@ import CreateProductPage from './products/createProduct';
 import EditProductPage from './products/editProduct';
 import AdminsPage from './admins';
 import CreateAdminPage from './admins/createAdmin';
+import EditAdminPage from './admins/editAdmin';
 import OrdersPage from './orders';
 import SettingsPage from './settings';
 import styles from '@styles/dashboard/dashboard.module.css';
@@ -195,6 +196,11 @@ const Dashboard = () => {
             exact
             path='/dashboard/admins/create'
             component={CreateAdminPage}
+          />
+           <Route
+            exact
+            path='/dashboard/admins/edit/:id'
+            component={EditAdminPage}
           />
           <Route exact path='/dashboard/orders' component={OrdersPage} />
           <Route exact path='/dashboard/settings' component={SettingsPage} />

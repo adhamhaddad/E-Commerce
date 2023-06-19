@@ -13,6 +13,7 @@
 .card.disabled {
     opacity: 0.4;
 }
+
 .card.disabled .product-img {
     cursor: auto;
 }
@@ -33,13 +34,15 @@
 .card .product-name,
 .card .price {
     padding: 5px 0px;
-    
+
 }
+
 .card .product-name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis
 }
+
 .card .quantity {
     margin-bottom: 10px;
     font-size: 12px;
@@ -95,4 +98,45 @@
 .card .controller button:hover {
     background-color: rgb(207, 144, 28);
     transition: background .5s ease-in-out;
+}
+
+
+.delete-product-modal {
+    background-color: #FFF;
+    width: 400px;
+    padding: 20px;
+}
+
+.modal-title {
+    text-align: center;
+}
+
+.modal-message {
+    text-align: center;
+    margin: 20px 0px;
+}
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-actions button {
+    width: 50%;
+    height: 50px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #FFF;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: #0AA284;
+    margin-right: 10px;
+}
+
+.delete-button {
+    background-color: red;
 }

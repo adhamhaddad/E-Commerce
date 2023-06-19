@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS phones (
+    id SERIAL PRIMARY KEY,
+    phone VARCHAR(30) UNIQUE NOT NULL,
+    is_default BOOLEAN DEFAULT false,
+    is_verified BOOLEAN DEFAULT false,
+    user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);

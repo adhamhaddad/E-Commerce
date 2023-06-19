@@ -4,7 +4,7 @@ import {
   validateDeleteIcon
 } from '../../middlewares/validation/icons';
 import { updateIcon, deleteIcon } from '../../controllers/icons';
-import { upload } from '../../utils/upload';
+import { icons } from '../../utils/upload';
 
 const router = Router();
 

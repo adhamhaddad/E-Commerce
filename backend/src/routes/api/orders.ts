@@ -9,6 +9,7 @@ import {
   createOrder,
   getOrders,
   getOrder,
+  getAdminOrders,
   updateOrder,
   deleteOrder
 } from '../../controllers/orders';
@@ -18,8 +19,10 @@ const router = Router();
 
 router
   .post('/', validateCreateOrder, verifyToken, createOrder)
+  .get('/admin/all', verifyToken, getAdminOrders)
   .get('/all/:user_id', validateGetOrders, verifyToken, getOrders)
   .get('/:id', validateGetOrder, verifyToken, getOrder)
+  .patch('/:id', verifyToken, updateOrder)
   .delete('/:id', validateDeleteOrder, verifyToken, deleteOrder);
 
 export default router;

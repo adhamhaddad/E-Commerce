@@ -1,16 +1,26 @@
 import { Router } from 'express';
-import { createAdmin, getAdmins, deleteAdmin } from '../../controllers/admins';
 import {
-  validateCreateUser,
-  validateDeleteUser
-} from '../../middlewares/validation/users';
+  createAdmin,
+  getAdmins,
+  getAdmin,
+  updateAdmin,
+  deleteAdmin
+} from '../../controllers/admins';
+import {
+  validateCreateAdmin,
+  validateGetAdmin,
+  validateUpdateAdmin,
+  validateDeleteAdmin
+} from '../../middlewares/validation/admins';
 import { verifyToken } from '../../middlewares/verifyToken';
 
 const router = Router();
 
 router
-  .post('/', validateCreateUser, createAdmin)
+  .post('/', validateCreateAdmin, createAdmin)
   .get('/', verifyToken, getAdmins)
-  .delete('/:id', validateDeleteUser, verifyToken, deleteAdmin);
+  .get('/:id', validateGetAdmin, verifyToken, getAdmin)
+  .patch('/:id', validateUpdateAdmin, verifyToken, updateAdmin)
+  .delete('/:id', validateDeleteAdmin, verifyToken, deleteAdmin);
 
 export default router;

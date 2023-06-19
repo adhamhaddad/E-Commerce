@@ -1,16 +1,21 @@
 import React from 'react';
 import { API_URL } from '@config';
+import { useCart } from '@hooks';
 import styles from '@styles/item.module.css';
 
-const Item = ({
-  id,
-  image_url,
-  name,
-  productQuantity,
-  price,
-  handleQuantity,
-  handleRemoveItem
-}) => {
+const Item = ({ id, image_url, name, productQuantity, price }) => {
+  const { updateCartItemQuantity, removeCartItem } = useCart();
+
+  const handleRemoveItem = () => {
+    removeCartItem(id);
+  };
+
+  const handleQuantity = (action) => {
+    const newQuantity =
+      action === 'increment' ? productQuantity + 1 : productQuantity - 1;
+    updateCartItemQuantity(id, newQuantity);
+  };
+
   return (
     <li className={styles['cart-item']}>
       <div className={styles['item-details']}>
@@ -30,7 +35,7 @@ const Item = ({
         <div className={styles['quantity-control']}>
           <button
             className={styles['quantity-button']}
-            onClick={() => handleQuantity('decrement', id)}
+            onClick={() => handleQuantity('decrement')}
             disabled={productQuantity === 1}
           >
             -
@@ -38,7 +43,7 @@ const Item = ({
           <span className={styles['quantity']}>{productQuantity}</span>
           <button
             className={styles['quantity-button']}
-            onClick={() => handleQuantity('increment', id)}
+            onClick={() => handleQuantity('increment')}
           >
             +
           </button>
@@ -46,7 +51,7 @@ const Item = ({
         <div className={styles['cart-actions']}>
           <button
             className={styles['remove-button']}
-            onClick={() => handleRemoveItem(id)}
+            onClick={handleRemoveItem}
           >
             Remove
           </button>

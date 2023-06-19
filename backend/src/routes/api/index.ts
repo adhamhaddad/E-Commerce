@@ -4,6 +4,7 @@ import admin from './admin';
 import email from './emails';
 import userAddress from './userAddress';
 import phone from './phone';
+import profilePictures from './profilePictures';
 import icons from './icons';
 import categories from './categories';
 import subCategories from './subCategories';
@@ -20,6 +21,7 @@ export {
   email,
   phone,
   userAddress,
+  profilePictures,
   icons,
   categories,
   subCategories,

@@ -6,14 +6,14 @@ import { authMe } from './authMe';
 import { UserRole } from '../../models/user';
 
 interface Payload {
-  id: string;
+  id?: number;
   first_name: string;
   last_name: string;
   role: UserRole;
   email: string;
 }
 interface DecodedToken {
-  id: string;
+  id?: number;
   first_name?: string;
   last_name?: string;
   role?: UserRole;

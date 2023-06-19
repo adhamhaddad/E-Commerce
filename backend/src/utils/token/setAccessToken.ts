@@ -22,11 +22,11 @@ export const setAccessToken = async (payload: Payload): Promise<string> => {
       algorithm: 'RS256',
       expiresIn: configs.access_expires,
       issuer: 'E-Commerce',
-      audience: `user_id-${payload.id}`,
+      audience: `user_id-${String(payload.id)}`,
       subject: 'access_token'
     };
     const token = jwt.sign(payload, privateKey, options);
-    await redisClient.set(`access_token:${payload.id}`, token, {
+    await redisClient.set(`access_token:${String(payload.id)}`, token, {
       EX: configs.access_expires
     });
     return token;

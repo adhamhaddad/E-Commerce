@@ -6,7 +6,7 @@ import { useAuth } from '@hooks';
 import avatar from '../../assets/images/avatar.svg';
 import styles from '@styles/form.module.css';
 
-const Login = () => {
+const LoginPage = () => {
   const [values, setValues] = useState({
     email: '',
     password: ''
@@ -18,11 +18,8 @@ const Login = () => {
   const { login } = useAuth();
 
   const handleChange = (prop) => (event) => {
-    if (errors.email || errors.password) {
-      setErrors({
-        email: null,
-        password: null
-      });
+    if (typeof errors[prop] === 'string') {
+      setErrors((prev) => ({ ...prev, [prop]: null }));
     }
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
@@ -47,6 +44,7 @@ const Login = () => {
       id: 'email',
       label: 'Email',
       type: 'email',
+      placeholder: 'Email Address',
       value: values.email,
       error: errors.email,
       onChange: handleChange('email')
@@ -55,6 +53,7 @@ const Login = () => {
       id: 'password',
       label: 'Password',
       type: 'password',
+      placeholder: 'Password',
       value: values.password,
       error: errors.password,
       onChange: handleChange('password')
@@ -87,4 +86,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

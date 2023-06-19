@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS attribute_names (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);

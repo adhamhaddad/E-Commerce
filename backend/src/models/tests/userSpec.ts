@@ -16,23 +16,23 @@ describe('User Model', () => {
     const newUser1 = {
       first_name: 'Adham',
       last_name: 'Haddad',
-      email: 'adhamhaddad.dev@gmail.com',
+      email: 'a.haddad@info.com',
       password: 'adham123',
-      role: UserRole.TENANT
+      role: UserRole.OWNER
     } as UserTypes;
 
     const newUser2 = {
       first_name: 'Adham',
       last_name: 'Ashraf',
-      email: 'adhamhaddad@gmail.com',
+      email: 'adhamhaddad.dev@gmail.com',
       password: 'adham123',
-      role: UserRole.CLIENT
+      role: UserRole.CUSTOMER
     } as UserTypes;
 
     const updated = {
       first_name: 'Adham',
       last_name: 'Haddad',
-      role: UserRole.CLIENT
+      role: UserRole.CUSTOMER
     };
 
     beforeAll(async () => {
@@ -59,7 +59,7 @@ describe('User Model', () => {
         id: 2,
         first_name: 'Adham',
         last_name: 'Ashraf',
-        role: 0
+        role: 'CUSTOMER'
       } as UserType);
     });
 
@@ -69,7 +69,7 @@ describe('User Model', () => {
         id: 2,
         first_name: 'Adham',
         last_name: 'Ashraf',
-        role: 0
+        role: 'CUSTOMER'
       } as UserType);
     });
 
@@ -79,7 +79,7 @@ describe('User Model', () => {
         id: 2,
         first_name: 'Adham',
         last_name: 'Haddad',
-        role: 0
+        role: 'CUSTOMER'
       } as UserType);
     });
 

@@ -1,2 +1,4 @@
 import { useAuth } from './useAuth';
-export { useAuth };
+import { useCart } from './useCart';
+
+export { useAuth, useCart };

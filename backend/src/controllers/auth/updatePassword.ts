@@ -5,7 +5,7 @@ const auth = new Auth();
 
 export const updatePassword = async (req: Request, res: Response) => {
   try {
-    const response = await auth.updatePassword(req.params.id, req.body);
+    const response = await auth.updatePassword(req.body);
     res.status(203).json({
       data: response,
       message: 'Password changed successfully.'

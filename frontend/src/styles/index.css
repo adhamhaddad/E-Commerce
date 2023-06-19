@@ -27,8 +27,13 @@ a {
   color: inherit;
   text-decoration: inherit;
 }
+
 button {
   background-color: inherit;
+}
+
+body {
+  background-color: #eee;
 }
 
 #root {

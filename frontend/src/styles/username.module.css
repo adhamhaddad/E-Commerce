@@ -23,3 +23,27 @@
 .left-side {
     border-right: 1px solid #ddd;
 }
+
+.left-side>span {
+    color: #444;
+    font-size: 14px;
+}
+
+.username-section form button {
+    /* display: block; */
+    width: fit-content;
+    padding: 10px;
+    margin: 10px 5px 10px 0px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: none;
+    background-color: orange;
+    color: #FFF;
+    cursor: pointer;
+    transition: background .5s ease-in-out;
+}
+
+.username-section form button:hover {
+    background-color: rgb(207, 144, 28);
+    transition: background .5s ease-in-out;
+}

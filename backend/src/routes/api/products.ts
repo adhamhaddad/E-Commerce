@@ -17,8 +17,8 @@ import {
   deleteProduct
 } from '../../controllers/products';
 import { verifyToken } from '../../middlewares/verifyToken';
-import { products } from '../../utils/upload';
 import { checkFolder } from '../../utils/checkUpload';
+import { products } from '../../utils/upload';
 
 const router = Router();
 

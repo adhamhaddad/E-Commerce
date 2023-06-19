@@ -1,4 +1,9 @@
-import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef
+} from 'react';
 import styles from '@styles/input.module.css';
 
 const Input = forwardRef(
@@ -11,13 +16,21 @@ const Input = forwardRef(
       value,
       style,
       error,
+      disabled,
+      contentEditable,
       isValid,
       onChange,
       onBlur
     },
     ref
   ) => {
+    const [visible, setVisible] = useState(false);
     const inputRef = useRef(null);
+
+    const handlePasswordVisibility = () => {
+      setVisible((prev) => !prev);
+    };
+
     useImperativeHandle(ref, () => ({
       resetValue() {
         if (inputRef.current) {
@@ -35,15 +48,24 @@ const Input = forwardRef(
         <label htmlFor={id} className={styles['input-box_label']}>
           {label}
         </label>
-        <input
-          className={styles['input-box_input']}
-          type={type}
-          ref={inputRef}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-        />
+        <div className={styles['input-container']}>
+          <input
+            className={styles['input-box_input']}
+            type={visible ? 'text' : type}
+            ref={inputRef}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            disabled={disabled}
+          />
+          {type === 'password' && (
+            <i
+              className={`fa-solid ${visible ? 'fa-eye-slash' : 'fa-eye'}`}
+              onClick={handlePasswordVisibility}
+            ></i>
+          )}
+        </div>
         {error && <p className={styles['error']}>{error}</p>}
       </div>
     );

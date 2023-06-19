@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@hooks';
 import { useApi } from '@config';
+import LoadingSpinner from '@common/loading';
 import styles from '@styles/dashboard/orders.module.css';
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
-  const { get } = useApi();
+  const { get, loading } = useApi();
 
   const getAllOrders = async () => {
     try {
-      const response = await get(`/orders/all`);
-      console.log(response.data);
+      const response = await get('/orders/admin/all');
       setOrders(response.data);
     } catch (error) {
       console.log(error);
@@ -24,15 +23,21 @@ const OrdersPage = () => {
       <tr key={order.id}>
         <td>{order.id}</td>
         <td>{order.tracking_number}</td>
-        <td>{order.delivery_fee}</td>
-        <td>{order.total}</td>
+        <td>{order.shipment_fee}</td>
+        <td>EGP {+order.total_price + +order.shipment_fee}</td>
+        <td>{order.order_status}</td>
         <td>
           {new Date(order.created_at).toLocaleString('en-US', {
-            dateStyle: 'short',
+            dateStyle: 'medium',
             timeStyle: 'short'
           })}
         </td>
-        <td>{order.status}</td>
+        <td>{order.shipment_address}</td>
+        <td>
+          {new Date(order.shipment_date).toLocaleString('en-US', {
+            dateStyle: 'medium'
+          })}
+        </td>
         <td className={styles['actions']}>
           <button>
             <Link exact='true' to={`/dashboard/orders/view/${order.id}`}>
@@ -43,7 +48,7 @@ const OrdersPage = () => {
       </tr>
     ));
   useEffect(() => {
-    // getAllOrders();
+    getAllOrders();
     return () => setOrders([]);
   }, []);
   return (
@@ -58,13 +63,23 @@ const OrdersPage = () => {
             <th>Tracking Number</th>
             <th>Delivery Fee</th>
             <th>Total</th>
-            <th>Order Date</th>
             <th>Status</th>
+            <th>Order Date</th>
             <th>Shipping Address</th>
+            <th>Shipment Date</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>{ordersList && ordersList}</tbody>
+        <tbody>
+          {loading && (
+            <tr>
+              <td colSpan='8' style={{ textAlign: 'center' }}>
+                <LoadingSpinner />
+              </td>
+            </tr>
+          )}
+          {!loading && ordersList && ordersList}
+        </tbody>
       </table>
     </div>
   );

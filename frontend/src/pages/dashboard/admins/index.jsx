@@ -3,14 +3,22 @@ import { Link } from 'react-router-dom';
 import { useApi } from '@config';
 import { useAuth } from '@hooks';
 import Modal from '@common/modal';
+import LoadingSpinner from '@common/loading';
 import styles from '@styles/dashboard/admins/index.module.css';
 
 const AdminsPage = () => {
   const [admins, setAdmins] = useState([]);
   const [modalStatus, setModalStatus] = useState(false);
+  const [adminId, setAdminId] = useState(null);
   const { user } = useAuth();
-  const { get, deleteFunc } = useApi();
+  const { get, deleteFunc, loading } = useApi();
 
+  const handleAdminId = (id) => {
+    setAdminId(id);
+  };
+  const handleModalState = () => {
+    setModalStatus((prev) => !prev);
+  };
   const getAdmins = async () => {
     try {
       const response = await get('/admins');
@@ -19,9 +27,9 @@ const AdminsPage = () => {
       console.log(error);
     }
   };
-  const handleDeleteAdmin = async (admin_id) => {
+  const handleDelete = async () => {
     try {
-      const response = await deleteFunc(`/admins/:${admin_id}`);
+      const response = await deleteFunc(`/admins/:${adminId}`);
       setAdmins((prev) =>
         prev.filter((admin) => admin.id !== response.data.id)
       );
@@ -30,9 +38,6 @@ const AdminsPage = () => {
     }
   };
 
-  const handleModalState = () => {
-    setModalStatus((prev) => !prev);
-  };
   const adminList =
     admins.length > 0 &&
     admins.map((admin) => (
@@ -43,16 +48,22 @@ const AdminsPage = () => {
         </td>
         <td>{admin.email}</td>
         <td>{admin.role}</td>
-        <td className={styles['actions']}>
-          <button onClick={() => handleDeleteAdmin(admin.id)}>
-            <i className='fa-solid fa-trash-can'></i>
-          </button>
-          <button>
-            <Link exact='true' to={`/dashboard/admins/edit/${admin.id}`}>
-              <i className='fa-solid fa-pen-to-square'></i>
-            </Link>
-          </button>
-        </td>
+        {user.role === 'STORE_OWNER' && (
+          <td className={styles['actions']}>
+            {admin.id !== user.id && (
+              <button
+                onClick={() => (handleModalState(), handleAdminId(admin.id))}
+              >
+                <i className='fa-solid fa-trash-can'></i>
+              </button>
+            )}
+            <button>
+              <Link exact='true' to={`/dashboard/admins/edit/${admin.id}`}>
+                <i className='fa-solid fa-pen-to-square'></i>
+              </Link>
+            </button>
+          </td>
+        )}
       </tr>
     ));
 
@@ -75,16 +86,25 @@ const AdminsPage = () => {
             <th>Name</th>
             <th>Email Address</th>
             <th>Permissions</th>
-            <th>Actions</th>
+            {user.role === 'STORE_OWNER' && <th>Actions</th>}
           </tr>
         </thead>
-        <tbody>{adminList && adminList}</tbody>
+        <tbody>
+          {loading && (
+            <tr>
+              <td colSpan='8' style={{ textAlign: 'center' }}>
+                <LoadingSpinner />
+              </td>
+            </tr>
+          )}
+          {!loading && adminList && adminList}
+        </tbody>
       </table>
       {modalStatus && (
         <Modal
           onClick={handleModalState}
           children={
-            <div className={styles['delete-product-modal']}>
+            <div className={styles['delete-admin-modal']}>
               <h3 className={styles['modal-title']}>Delete</h3>
               <p className={styles['modal-message']}>
                 Are you sure, you want to delete?
@@ -96,7 +116,12 @@ const AdminsPage = () => {
                 >
                   Cancel
                 </button>
-                <button className={styles['delete-button']}>Delete</button>
+                <button
+                  className={styles['delete-button']}
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           }

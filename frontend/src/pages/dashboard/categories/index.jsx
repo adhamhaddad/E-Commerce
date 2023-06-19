@@ -2,31 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@hooks';
 import { useApi, API_URL } from '@config';
+import Modal from '@common/modal';
+import LoadingSpinner from '@common/loading';
 import styles from '@styles/dashboard/categories/index.module.css';
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState([]);
+  const [modalStatus, setModalStatus] = useState(false);
+  const [categoryId, setCategoryId] = useState(null);
   const { user } = useAuth();
-  const { get, deleteFunc } = useApi();
+  const { get, deleteFunc, loading } = useApi();
 
+  const handleCategoryId = (id) => {
+    setCategoryId(id);
+  };
+  const handleModalState = () => {
+    setModalStatus((prev) => !prev);
+  };
+  const handleDelete = async () => {
+    try {
+      const response = await deleteFunc(`/categories/${categoryId}`);
+      setCategories((prev) =>
+        prev.filter((category) => category.id !== response.data.id)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const getAllCategories = async () => {
     try {
       const response = await get(`/categories/admin/all/${user.id}`);
-      console.log(response.data);
       setCategories(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleDeleteCategory = async (category_id) => {
-    await deleteFunc(`/categories/${category_id}`)
-      .then((res) =>
-        setCategories((prev) =>
-          prev.filter((category) => category.id !== res.data.id)
-        )
-      )
-      .catch((err) => console.log(err));
-  };
+
   const categoriesList =
     categories.length > 0 &&
     categories.map((category) => (
@@ -45,12 +56,14 @@ const CategoriesPage = () => {
         </td>
         <td>
           {new Date(category.created_at).toLocaleString('en-US', {
-            dateStyle: 'short',
+            dateStyle: 'medium',
             timeStyle: 'short'
           })}
         </td>
         <td className={styles['actions']}>
-          <button onClick={() => handleDeleteCategory(category.id)}>
+          <button
+            onClick={() => (handleModalState(), handleCategoryId(category.id))}
+          >
             <i className='fa-solid fa-trash-can'></i>
           </button>
           <button>
@@ -84,8 +97,44 @@ const CategoriesPage = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>{categoriesList && categoriesList}</tbody>
+        <tbody>
+          {loading && (
+            <tr>
+              <td colSpan='8' style={{ textAlign: 'center' }}>
+                <LoadingSpinner />
+              </td>
+            </tr>
+          )}
+          {!loading && categoriesList && categoriesList}
+        </tbody>
       </table>
+      {modalStatus && (
+        <Modal
+          onClick={handleModalState}
+          children={
+            <div className={styles['delete-category-modal']}>
+              <h3 className={styles['modal-title']}>Delete</h3>
+              <p className={styles['modal-message']}>
+                Are you sure, you want to delete?
+              </p>
+              <div className={styles['modal-actions']}>
+                <button
+                  className={styles['cancel-button']}
+                  onClick={handleModalState}
+                >
+                  Cancel
+                </button>
+                <button
+                  className={styles['delete-button']}
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          }
+        />
+      )}
     </div>
   );
 };

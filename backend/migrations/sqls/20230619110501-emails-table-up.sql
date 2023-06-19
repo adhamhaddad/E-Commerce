@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS emails (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    is_default BOOLEAN DEFAULT false,
+    is_verified BOOLEAN DEFAULT false,
+    user_id INT NOT NULL REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);

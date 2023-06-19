@@ -1,84 +1,117 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApi } from '@config';
-import { useAuth } from '@hooks';
+import { useAuth, useCart } from '@hooks';
 import Item from './item';
+import Modal from '@common/modal';
 import styles from '@styles/cart.module.css';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [values, setValues] = useState({
+    shipment_address: '',
+    shipment_date: ''
+  });
+  const [modalStatus, setModalStatus] = useState(false);
   const { post, loading } = useApi();
   const { user } = useAuth();
-  const handleQuantity = (type, id) => {
-    if (type === 'decrement') {
-      setCartItems((prev) =>
-        prev.filter((item) =>
-          item.id === id
-            ? { ...item, productQuantity: item.productQuantity > 1 ? item.productQuantity-- : 1 }
-            : item
-        )
-      );
-    } else {
-      setCartItems((prev) =>
-        prev.filter((item) =>
-          item.id === id ? { ...item, productQuantity: item.productQuantity++ } : item
-        )
-      );
-    }
+  const { cartItems } = useCart();
+
+  const handleModalStatus = () => {
+    setModalStatus((prev) => !prev);
   };
 
-  const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-    // Update localStorage
-    const updatedCartItems = cartItems.filter((item) => item.id !== id);
-    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-  };
   const addOrder = async () => {
-    await post('/orders', {
-      user_id: user.id,
-      items: cartItems.map((item) => ({
-        product_id: item.id,
-        quantity: String(item.productQuantity)
-      }))
-    })
-      .then((res) => {
-        setCartItems([]);
-        localStorage.removeItem('cartItems');
-      })
-      .catch((err) => console.log(err));
+    try {
+      const response = await post('/orders', {
+        user_id: user.id,
+        items: cartItems.map((item) => ({
+          product_id: item.id,
+          quantity: String(item.productQuantity)
+        })),
+        shipment_address: values.shipment_address,
+        shipment_date: values.shipment_date
+      });
+      setValues({ shipment_address: '', shipment_date: '' });
+      localStorage.removeItem('cartItems');
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const handleSubmit = (event) => {
+  const handleChange = (prop) => (event) => {
+    setValues((prev) => ({ ...prev, [prop]: event.target.value }));
+  };
+  const handleSubmit = () => {
     addOrder();
+    setModalStatus((prev) => !prev);
   };
-  useEffect(() => {
-    const storedCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-    setCartItems(storedCartItems);
-  }, []);
 
   const itemList =
     cartItems.length > 0 &&
-    cartItems.map((item) => (
-      <Item
-        key={item.id}
-        {...item}
-        handleQuantity={handleQuantity}
-        handleRemoveItem={handleRemoveItem}
-      />
-    ));
+    cartItems.map((item) => <Item key={item.id} {...item} />);
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.productQuantity,
     0
   );
 
   return (
-    <div className={styles['cart-list']}>
+    <div className={styles['cart-list-page']}>
       <div className={styles['top-bar']}>
         <h3>Your Cart</h3>
       </div>
-      <ul className={styles['cart-items']}>{itemList}</ul>
-      <p className={styles['total-price']}>Total: {totalPrice} EGP</p>
-      <button className={styles['checkout-button']} onClick={handleSubmit}>
+      <ul className={styles['cart-items']}>
+        {!itemList && <li>Your cart list is empty.</li>}
+        {itemList && itemList}
+      </ul>
+      <div className={styles['total-price']}>
+        <span>Delivery Fee: 60</span>
+        <span>Total: {totalPrice + 60} EGP</span>
+      </div>
+      <button className={styles['checkout-button']} onClick={handleModalStatus}>
         Checkout
       </button>
+      {modalStatus && (
+        <Modal onClick={handleModalStatus}>
+          <div className={styles['order-dialog']}>
+            <div className={styles['top-bar']}>
+              <h3>Order Information</h3>
+            </div>
+            <div className={styles['payment-method']}>
+              <label>Payment Method</label>
+              <span>Cash</span>
+            </div>
+            <div className={styles['order-address']}>
+              <label htmlFor='address'>Shipping Address</label>
+              <input
+                type='text'
+                id='address'
+                placeholder='street, address'
+                value={values.shipment_address}
+                onChange={handleChange('shipment_address')}
+              />
+            </div>
+            <div className={styles['order-address']}>
+              <label htmlFor='address'>Shipping Date</label>
+              <input
+                type='date'
+                id='address'
+                placeholder='date'
+                value={values.shipment_date}
+                onChange={handleChange('shipment_date')}
+              />
+            </div>
+            <div className={styles['modal-actions']}>
+              <button
+                className={styles['cancel-button']}
+                onClick={handleModalStatus}
+              >
+                Cancel
+              </button>
+              <button className={styles['order-button']} onClick={handleSubmit}>
+                Order
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

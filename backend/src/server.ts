@@ -8,6 +8,7 @@ import { Server } from 'socket.io';
 import os from 'os';
 import configs from './configs';
 import router from './routes';
+import client from './database/redis';
 
 const app: Application = express();
 const port: number = configs.port || 8080;
@@ -32,7 +33,8 @@ const corsOptions = {
 
 const ip =
   os.networkInterfaces()['wlan0']?.[0].address ||
-  os.networkInterfaces()['eth0']?.[0].address;
+  os.networkInterfaces()['eth0']?.[0].address ||
+  '127.0.0.1';
 
 const uploads = path.join(__dirname, '..', 'uploads');
 const icons = express.static(uploads + '/icons');
@@ -70,5 +72,7 @@ io.on('connection', (socket) => {
     console.log('User disconnected', socket);
   });
 });
+
+client.connect();
 
 export { app, port, io };

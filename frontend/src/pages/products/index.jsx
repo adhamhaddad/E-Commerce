@@ -1,41 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { useApi } from '@config';
 import Card from '@UI/card';
+import LoadingSpinner from '@common/loading';
 import styles from '@styles/products.module.css';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const searchParams = new URLSearchParams(location.search);
-  const name = searchParams.get('name');
-  const category = searchParams.get('category');
-  const id = searchParams.get('id');
+  const [errors, setErrors] = useState(null);
   const { get, deleteFunc, loading } = useApi();
+  const searchParams = new URLSearchParams(location.search);
+  const id = searchParams.get('id');
+  const category = searchParams.get('category');
+  const name = searchParams.get('name');
 
   const getProducts = async () => {
-    await get(`/products/all/${id}`)
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err));
+    try {
+      const response = await get(`/products/all/${id}`);
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const getAllProducts = async () => {
-    await get('/products/all')
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err));
+    try {
+      const response = await get('/products/all');
+      setProducts(response.data);
+    } catch (error) {
+      console.log(err);
+    }
   };
 
   const getProductBySearch = async () => {
-    await get('/products/search', { params: { name } })
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err));
+    try {
+      const response = await get('/products/search', { params: { name } });
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleDeleteProduct = async (product_id) => {
-    await deleteFunc(`/products/${product_id}`)
-      .then((res) =>
-        setProducts((prev) =>
-          prev.filter((product) => product.id !== res.data.id)
-        )
-      )
-      .catch((err) => console.log(err));
+    try {
+      const response = await deleteFunc(`/products/${product_id}`);
+      setProducts((prev) =>
+        prev.filter((product) => product.id !== response.data.id)
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   const productList =
     products.length > 0 &&
@@ -68,9 +80,13 @@ const ProductsPage = () => {
 
   return (
     <div className={styles['products-list']}>
-      {!loading && !productList && <p>This Category is empty.</p>}
-      {loading && <p>Loading..</p>}
-      {productList ?? productList}
+      {loading && <LoadingSpinner />}
+      {!loading && !productList && (
+        <div className={styles['empty-message']}>
+          <p>This category is empty.</p>
+        </div>
+      )}
+      {!loading && productList && productList}
     </div>
   );
 };

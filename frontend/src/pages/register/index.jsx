@@ -6,7 +6,7 @@ import Button from '@UI/button';
 import avatar from '../../assets/images/avatar.svg';
 import styles from '@styles/form.module.css';
 
-const Register = () => {
+const RegisterPage = () => {
   const [values, setValues] = useState({
     first_name: '',
     last_name: '',
@@ -22,6 +22,9 @@ const Register = () => {
   const { register } = useAuth();
 
   const handleChange = (prop) => (event) => {
+    if (typeof errors[prop] === 'string') {
+      setErrors((prev) => ({ ...prev, [prop]: null }));
+    }
     setValues((prev) => ({ ...prev, [prop]: event.target.value }));
   };
 
@@ -29,27 +32,38 @@ const Register = () => {
     event.preventDefault();
     register(values, (err) => {
       const errors = err.response.data.errors;
-      errors.forEach((error) => {
-        if (error.first_name) {
-          setErrors((prev) => ({ ...prev, first_name: error.first_name }));
-        }
-        if (error.last_name) {
-          setErrors((prev) => ({ ...prev, last_name: error.last_name }));
-        }
-        if (error.email) {
-          setErrors((prev) => ({ ...prev, email: error.email }));
-        }
-        if (error.password) {
-          setErrors((prev) => ({ ...prev, password: error.password }));
-        }
-      });
+      const duplicateEmail = err.response.data.message;
+      
+      if (errors) {
+        errors.forEach((error) => {
+          if (error.first_name) {
+            setErrors((prev) => ({ ...prev, first_name: error.first_name }));
+          }
+          if (error.last_name) {
+            setErrors((prev) => ({ ...prev, last_name: error.last_name }));
+          }
+          if (error.email) {
+            setErrors((prev) => ({ ...prev, email: error.email }));
+          }
+          if (error.password) {
+            setErrors((prev) => ({ ...prev, password: error.password }));
+          }
+        });
+      }
+      if (duplicateEmail.includes('emails_email_key')) {
+        setErrors((prev) => ({
+          ...prev,
+          email: 'Email address has taken before'
+        }));
+      }
     });
-    setValues({
-      first_name: '',
-      last_name: '',
-      email: '',
-      password: ''
-    });
+
+    // setValues({
+    //   first_name: '',
+    //   last_name: '',
+    //   email: '',
+    //   password: ''
+    // });
   };
 
   const Inputs = [
@@ -57,6 +71,7 @@ const Register = () => {
       id: 'first_name',
       label: 'First Name',
       type: 'text',
+      placeholder: 'First Name',
       value: values.first_name,
       error: errors.first_name,
       onChange: handleChange('first_name')
@@ -65,6 +80,7 @@ const Register = () => {
       id: 'last_name',
       label: 'Last Name',
       type: 'text',
+      placeholder: 'Last Name',
       value: values.last_name,
       error: errors.last_name,
       onChange: handleChange('last_name')
@@ -73,6 +89,7 @@ const Register = () => {
       id: 'email',
       label: 'Email Address',
       type: 'email',
+      placeholder: 'Email Address',
       value: values.email,
       error: errors.email,
       onChange: handleChange('email')
@@ -81,6 +98,7 @@ const Register = () => {
       id: 'password',
       label: 'New Password',
       type: 'password',
+      placeholder: 'New Password',
       value: values.password,
       error: errors.password,
       onChange: handleChange('password')
@@ -101,10 +119,10 @@ const Register = () => {
           <Button text='Register' type='submit' onClick={handleSubmit} />
         </form>
         <p>
-          Already have an account? <Link to='/login'>Login</Link> Now
+          Already have an account? <Link to='/login'>Login</Link> now
         </p>
       </div>
     </div>
   );
 };
-export default Register;
+export default RegisterPage;

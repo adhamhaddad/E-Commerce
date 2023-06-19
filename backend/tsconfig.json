@@ -10,5 +10,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "./dist", "./public"]
+  "exclude": ["node_modules", "./dist", "./sql", "./spec"]
 }

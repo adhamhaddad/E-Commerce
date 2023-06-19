@@ -3,25 +3,21 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@hooks';
 import { useApi, API_URL } from '@config';
 import Modal from '@common/modal';
+import LoadingSpinner from '@common/loading';
 import styles from '@styles/dashboard/products/index.module.css';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const { user } = useAuth();
-  const { get, deleteFunc } = useApi();
   const [modalStatus, setModalStatus] = useState(false);
+  const [productId, setProductId] = useState(null);
+  const { user } = useAuth();
+  const { get, deleteFunc, loading } = useApi();
+
+  const handleProductId = (id) => {
+    setProductId(id);
+  };
   const handleModalState = () => {
     setModalStatus((prev) => !prev);
-  };
-  const handleDelete = async (product_id) => {
-    try {
-      const response = await deleteFunc(`/products/${product_id}`);
-      setProducts((prev) =>
-        prev.filter((product) => product.id !== response.data.id)
-      );
-    } catch (error) {
-      console.log(error);
-    }
   };
   const getAllProducts = async () => {
     try {
@@ -31,6 +27,17 @@ const ProductsPage = () => {
       console.log(error);
     }
   };
+  const handleDelete = async () => {
+    try {
+      const response = await deleteFunc(`/products/${productId}`);
+      setProducts((prev) =>
+        prev.filter((product) => product.id !== response.data.id)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const productsList =
     products.length > 0 &&
     products.map((product) => (
@@ -51,12 +58,14 @@ const ProductsPage = () => {
         <td>{product.quantity}</td>
         <td>
           {new Date(product.created_at).toLocaleString('en-US', {
-            dateStyle: 'short',
+            dateStyle: 'medium',
             timeStyle: 'short'
           })}
         </td>
         <td className={styles['actions']}>
-          <button onClick={handleModalState}>
+          <button
+            onClick={() => (handleModalState(), handleProductId(product.id))}
+          >
             <i className='fa-solid fa-trash-can'></i>
           </button>
           <button>
@@ -92,7 +101,16 @@ const ProductsPage = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>{productsList && productsList}</tbody>
+        <tbody>
+          {loading && (
+            <tr>
+              <td colSpan='8' style={{ textAlign: 'center' }}>
+                <LoadingSpinner />
+              </td>
+            </tr>
+          )}
+          {!loading && productsList && productsList}
+        </tbody>
       </table>
       {modalStatus && (
         <Modal

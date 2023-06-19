@@ -12,6 +12,7 @@ type AuthType = {
 export type PasswordType = {
   old_password: string;
   new_password: string;
+  user_id: number;
 };
 
 class Auth {
@@ -39,7 +40,7 @@ class Auth {
         const check = await compare(u.password, hash);
         if (check) {
           const query = {
-            text: 'SELECT DISTiNCT u.id, u.first_name, u.last_name, u.role, e.email FROM users u, emails e WHERE e.user_id=u.id AND u.id=$1',
+            text: 'SELECT DISTINCT u.id, u.first_name, u.last_name, u.role, e.email FROM users u, emails e WHERE e.user_id=u.id AND u.id=$1',
             values: [id]
           };
           const userResult = await connection.query(query);
@@ -60,21 +61,21 @@ class Auth {
       return result.rows[0];
     });
   }
-  async updatePassword(id: string, p: PasswordType): Promise<UserType> {
+  async updatePassword(p: PasswordType): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
         text: 'SELECT password FROM passwords WHERE user_id=$1',
-        values: [id]
+        values: [p.user_id]
       };
       const result = await connection.query(query);
       if (result.rows.length) {
         const { password: hash } = result.rows[0];
         const check = await compare(p.old_password, hash);
         if (check) {
-          const password = await hashPass(p.new_password);
+          const new_password = await hashPass(p.new_password);
           const query = {
-            text: 'UPDATE passwords SET password=$2 WHERE user_id=$1',
-            values: [id, password]
+            text: 'UPDATE passwords SET password=$2 WHERE user_id=$1 RETURNING user_id',
+            values: [p.user_id, new_password]
           };
           const result = await connection.query(query);
           return result.rows[0];

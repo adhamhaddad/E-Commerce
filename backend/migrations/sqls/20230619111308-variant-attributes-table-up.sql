@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS variant_attributes (
+    id SERIAL PRIMARY KEY,
+    value TEXT NOT NULL,
+    variant_id INT NOT NULL REFERENCES variants(id) ON UPDATE CASCADE ON DELETE CASCADE
+);

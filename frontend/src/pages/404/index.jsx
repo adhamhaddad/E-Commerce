@@ -1,10 +1,11 @@
 import React from 'react';
+import styles from '@styles/404.module.css';
 
-const NotFound = () => {
+const NotFoundPage = () => {
   return (
-    <div>
+    <div className={styles['not-found-page']}>
       <h1>404 Page not found.</h1>
     </div>
   );
 };
-export default NotFound;
+export default NotFoundPage;

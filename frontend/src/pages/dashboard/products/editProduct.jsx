@@ -200,30 +200,11 @@ const EditProductPage = () => {
               rows='10'
               placeholder='Product Description'
               value={values.product_desc}
+              className={styles['product-description']}
               onChange={handleChange('product_desc')}
             ></textarea>
           </div>
         </div>
-        {/* <div>
-          <div className={styles['left-side']}>
-            <h3>Select Category</h3>
-            <span>Select the product category from here</span>
-          </div>
-          <div>
-            <select
-              onChange={handleChange('category_id')}
-              value={values.category_id}
-            >
-              <option value=''>select category</option>
-              {categories.length > 0 &&
-                categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        </div> */}
         <Button text='Update Product' type='submit' />
       </form>
     </div>

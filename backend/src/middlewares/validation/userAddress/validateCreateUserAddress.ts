@@ -5,25 +5,26 @@ import { validate } from '../validationResult';
 export const validateCreateUserAddress = [
   body('city')
     .exists()
-    .withMessage('city is missing from the body')
+    .withMessage('City is missing from the body')
     .notEmpty()
-    .isString(),
+    .withMessage('City is empty')
+    .isString()
+    .withMessage('City must be a string'),
   body('postal_code')
     .exists()
-    .withMessage('postal_code is missing from the body')
+    .withMessage('Postal code is missing from the body')
     .notEmpty()
+    .withMessage('Postal code is empty')
     .isNumeric()
-    .withMessage('postal_code must be a number'),
+    .withMessage('Postal code must be a number'),
   body('address1')
     .exists()
-    .withMessage('address1 is missing from the body')
+    .withMessage('Address 1 is missing from the body')
     .notEmpty()
-    .withMessage('address1 is empty')
+    .withMessage('Address 1 is empty')
     .isString()
-    .withMessage('address1 must be a string'),
-  body('address2')
-    .exists()
-    .withMessage('address2 is missing from the body'),
+    .withMessage('Address 1 must be a string'),
+  body('address2').exists().withMessage('Address 2 is missing from the body'),
   body('user_id')
     .exists()
     .withMessage('user_id is missing from the body')

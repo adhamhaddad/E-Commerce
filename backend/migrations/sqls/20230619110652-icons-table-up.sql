@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS icons (
+    id SERIAL PRIMARY KEY,
+    icon_url TEXT NOT NULL
+);

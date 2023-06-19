@@ -5,7 +5,7 @@ import ProductsPage from '../products';
 import ProductPage from '../product';
 import styles from '../../styles/home.module.css';
 
-const Home = () => {
+const HomePage = () => {
   const searchParams = new URLSearchParams(location.search);
   const category = searchParams.get('category');
   return (
@@ -21,4 +21,4 @@ const Home = () => {
     </div>
   );
 };
-export default Home;
+export default HomePage;

@@ -1,15 +1,15 @@
 import React from 'react';
 import { useAuth } from '@hooks';
 import Button from '@UI/button';
-import UserName from './username';
-import Email from './email';
-import Phone from './phone';
-import Address from './address';
-import Password from './password';
-import avatar from '../../assets/images/avatar.svg';
-import styles from '@styles/account.module.css';
+import UserName from '@common/username';
+import Email from '@common/email';
+import Phone from '@common/phone';
+import Address from '@common/address';
+import Password from '@common/password';
+import avatar from '@assets/images/avatar.svg';
+import styles from '@styles/account/index.module.css';
 
-const Account = () => {
+const AccountPage = () => {
   const { user, logout } = useAuth();
   return (
     <div className={styles['account-page']}>
@@ -36,10 +36,10 @@ const Account = () => {
         <UserName />
         <Email />
         <Phone />
-        <Address />
+        {user.role === 'CUSTOMER' && <Address />}
         <Password />
       </div>
     </div>
   );
 };
-export default Account;
+export default AccountPage;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useApi, API_URL } from '@config';
+import LoadingSpinner from '@common/loading';
 import styles from '@styles/sidebar.module.css';
 
 const Sidebar = () => {
@@ -8,12 +9,15 @@ const Sidebar = () => {
   const { get, loading } = useApi();
 
   const getCategories = async () => {
-    await get('/categories')
-      .then((res) => setCategories(res.data))
-      .catch((err) => console.log(err));
+    try {
+      const response = await get('/categories');
+      setCategories(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const list =
+  const categoriesList =
     categories.length > 0 &&
     categories.map((category) => (
       <li key={category.id}>
@@ -47,8 +51,8 @@ const Sidebar = () => {
             <span>All</span>
           </NavLink>
         </li>
-        {loading && 'Loading'}
-        {!loading && list && list}
+        {loading && <LoadingSpinner />}
+        {!loading && categoriesList && categoriesList}
       </ul>
     </aside>
   );

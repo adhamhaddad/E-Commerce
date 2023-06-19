@@ -1,5 +1,6 @@
 import { PoolClient } from 'pg';
 import { pgClient } from '../database';
+import { v4 as uuidv4 } from 'uuid';
 import OrderItem, { OrderItemType } from './orderItems';
 
 type OrderType = {
@@ -7,6 +8,8 @@ type OrderType = {
   user_id: number;
   items: [{ product_id: number; quantity: string }];
   order_status: string;
+  shipment_address: string;
+  shipment_date: Date;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -55,11 +58,18 @@ class Order {
 
         // INSERT order data
         const query = {
-          text: 'INSERT INTO orders (user_id) VALUES ($1) RETURNING *',
-          values: [o.user_id]
+          text: 'INSERT INTO orders (user_id, tracking_number) VALUES ($1, $2) RETURNING *',
+          values: [o.user_id, uuidv4().split('-')[0]]
         };
         const result = await connection.query(query);
         const { id: order_id } = result.rows[0];
+
+        // INSERT shipment data
+        const shipmentQuery = {
+          text: 'INSERT INTO shipments (order_id, shipment_address, shipment_date) VALUES ($1, $2, $3)',
+          values: [order_id, o.shipment_address, o.shipment_date]
+        };
+        await connection.query(shipmentQuery);
 
         // INSERT order item bridge data
         const orderItemBridgeQuery = orderItemResult.map((item) => ({
@@ -76,8 +86,27 @@ class Order {
   async getOrders(user_id: string): Promise<OrderType[]> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SELECT * FROM orders WHERE user_id=$1',
+        text: `
+        SELECT o.*, s.*, SUM(oi.price * oi.quantity) AS total_price
+        FROM orders o, shipments s, order_items oi, order_items_bridge oib
+        WHERE s.order_id=o.id AND oi.id=oib.item_id AND oib.order_id=o.id AND o.user_id=$1
+        GROUP BY o.id, s.id
+        `,
         values: [user_id]
+      };
+      const result = await connection.query(query);
+      return result.rows;
+    });
+  }
+  async getAdminOrders(): Promise<OrderType[]> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: `
+        SELECT o.*, s.*, SUM(oi.price * oi.quantity) AS total_price
+        FROM orders o, shipments s, order_items oi, order_items_bridge oib
+        WHERE s.order_id=o.id AND oi.id=oib.item_id AND oib.order_id=o.id
+        GROUP BY o.id, s.id
+        `
       };
       const result = await connection.query(query);
       return result.rows;
@@ -86,7 +115,12 @@ class Order {
   async getOrder(id: string): Promise<OrderType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
-        text: 'SELECT * FROM orders WHERE id=$1',
+        text: `
+        SELECT o.*, s.*, SUM(oi.price * oi.quantity) AS total_price
+        FROM orders o, shipments s, order_items oi, order_items_bridge oib
+        WHERE s.order_id=o.id AND oi.id=oib.item_id AND oib.order_id=o.id AND o.id=$1
+        GROUP BY o.id, s.id
+        `,
         values: [id]
       };
       const result = await connection.query(query);

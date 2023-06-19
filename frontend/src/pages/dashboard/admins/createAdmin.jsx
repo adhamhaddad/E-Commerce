@@ -148,7 +148,9 @@ const CreateAdminPage = () => {
             </select>
           </div>
         </div>
-        <Button text='Add Admin' type='submit' onClick={handleSubmit} />
+        {!loading && (
+          <Button text='Add Admin' type='submit' onClick={handleSubmit} />
+        )}
       </form>
     </div>
   );

@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS order_items (
+    id SERIAL PRIMARY KEY,
+    product_id INT NOT NULL REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    price INT NOT NULL,
+    quantity INT NOT NULL
+);

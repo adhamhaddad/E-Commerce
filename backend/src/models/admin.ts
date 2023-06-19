@@ -70,6 +70,30 @@ class Admin {
       return result.rows;
     });
   }
+  async getAdmin(id: string): Promise<UserType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: `
+        SELECT DISTINCT u.id, u.first_name, u.last_name, u.role, e.email
+        FROM users u, emails e
+        WHERE e.user_id=u.id AND u.id=$1
+        `,
+        values: [id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
+    });
+  }
+  async updateAdmin(id: string, u: UserTypes): Promise<UserType> {
+    return this.withConnection(async (connection: PoolClient) => {
+      const query = {
+        text: 'UPDATE users SET first_name=$2, last_name=$3, role=$4 WHERE id=$1 RETURNING *',
+        values: [id]
+      };
+      const result = await connection.query(query);
+      return result.rows[0];
+    });
+  }
   async deleteAdmin(id: string): Promise<UserType> {
     return this.withConnection(async (connection: PoolClient) => {
       const query = {
