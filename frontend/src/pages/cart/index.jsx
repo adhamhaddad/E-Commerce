@@ -13,7 +13,7 @@ const CartPage = () => {
   const [modalStatus, setModalStatus] = useState(false);
   const { post, loading } = useApi();
   const { user } = useAuth();
-  const { cartItems } = useCart();
+  const { cartItems, deleteCartItems } = useCart();
 
   const handleModalStatus = () => {
     setModalStatus((prev) => !prev);
@@ -25,13 +25,13 @@ const CartPage = () => {
         user_id: user.id,
         items: cartItems.map((item) => ({
           product_id: item.id,
-          quantity: String(item.productQuantity)
+          quantity: item.quantity
         })),
         shipment_address: values.shipment_address,
         shipment_date: values.shipment_date
       });
       setValues({ shipment_address: '', shipment_date: '' });
-      localStorage.removeItem('cartItems');
+      deleteCartItems();
     } catch (error) {
       console.log(error);
     }
@@ -47,8 +47,9 @@ const CartPage = () => {
   const itemList =
     cartItems.length > 0 &&
     cartItems.map((item) => <Item key={item.id} {...item} />);
+
   const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.price * item.productQuantity,
+    (acc, item) => acc + item.price * item.quantity,
     0
   );
 
@@ -63,7 +64,7 @@ const CartPage = () => {
       </ul>
       <div className={styles['total-price']}>
         <span>Delivery Fee: 60</span>
-        <span>Total: {totalPrice + 60} EGP</span>
+        <span>Total: {totalPrice > 0 ? totalPrice + 60 : 0} EGP</span>
       </div>
       <button className={styles['checkout-button']} onClick={handleModalStatus}>
         Checkout

@@ -16,9 +16,9 @@ const Card = ({
 }) => {
   const [productQuantity, setProductQuantity] = useState(1);
   const [modalStatus, setModalStatus] = useState(false);
-  const history = useHistory();
   const { user } = useAuth();
   const { cartItems, updateCartItems } = useCart();
+  const history = useHistory();
 
   const handleModalState = () => {
     setModalStatus((prev) => !prev);
@@ -43,7 +43,7 @@ const Card = ({
 
     if (existingCartItem) {
       // If the product already exists in the cart, update its quantity
-      existingCartItem.productQuantity += Number(productQuantity);
+      existingCartItem.quantity += Number(productQuantity);
     } else {
       // If the product doesn't exist in the cart, add a new cart item
       const newCartItem = {
@@ -51,7 +51,7 @@ const Card = ({
         name: name,
         image_url: image_url,
         price: price,
-        productQuantity: 1
+        quantity: productQuantity
       };
       cartItems.push(newCartItem);
     }

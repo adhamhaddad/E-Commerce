@@ -3,7 +3,7 @@ import { API_URL } from '@config';
 import { useCart } from '@hooks';
 import styles from '@styles/item.module.css';
 
-const Item = ({ id, image_url, name, productQuantity, price }) => {
+const Item = ({ id, image_url, name, quantity, price }) => {
   const { updateCartItemQuantity, removeCartItem } = useCart();
 
   const handleRemoveItem = () => {
@@ -11,8 +11,7 @@ const Item = ({ id, image_url, name, productQuantity, price }) => {
   };
 
   const handleQuantity = (action) => {
-    const newQuantity =
-      action === 'increment' ? productQuantity + 1 : productQuantity - 1;
+    const newQuantity = action === 'increment' ? quantity + 1 : quantity - 1;
     updateCartItemQuantity(id, newQuantity);
   };
 
@@ -36,11 +35,11 @@ const Item = ({ id, image_url, name, productQuantity, price }) => {
           <button
             className={styles['quantity-button']}
             onClick={() => handleQuantity('decrement')}
-            disabled={productQuantity === 1}
+            disabled={quantity === 1}
           >
             -
           </button>
-          <span className={styles['quantity']}>{productQuantity}</span>
+          <span className={styles['quantity']}>{quantity}</span>
           <button
             className={styles['quantity-button']}
             onClick={() => handleQuantity('increment')}
